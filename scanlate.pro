@@ -15,15 +15,19 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     logindialog.cpp \
-    api.cpp \
     loadingwindow.cpp \
-    qproject.cpp
+    qscanlateserver.cpp \
+    qscanlateuser.cpp \
+    qscanlate.cpp \
+    qscanlateproject.cpp
 
 HEADERS  += mainwindow.h \
     logindialog.h \
-    api.h \
     loadingwindow.h \
-    qproject.h
+    qscanlateserver.h \
+    qscanlateuser.h \
+    qscanlate.h \
+    qscanlateproject.h
 
 FORMS    += mainwindow.ui \
     logindialog.ui \

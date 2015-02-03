@@ -3,7 +3,7 @@
 #include <QDesktopWidget>
 #include <QMovie>
 
-LoadingWindow::LoadingWindow(QString obj, QWidget *parent) :
+LoadingWindow::LoadingWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::LoadingWindow)
 {
@@ -20,8 +20,6 @@ LoadingWindow::LoadingWindow(QString obj, QWidget *parent) :
     ui->lMovie->setMovie(movie);
     movie->start();
     ui->lMovie->setMaximumWidth(movie->frameRect().width());
-
-    ui->lObject->setText(obj);
 }
 
 LoadingWindow::~LoadingWindow()
@@ -34,8 +32,9 @@ void LoadingWindow::Start()
     emit loadingProc();
 }
 
-void LoadingWindow::UpdateProgress(int all, int completed)
+void LoadingWindow::UpdateProgress(QString obj, int all, int completed)
 {
+    ui->lObject->setText(obj);
     ui->lCounter->setText(QString::number(completed) + "/" + QString::number(all));
     if (completed > all)
         this->close();

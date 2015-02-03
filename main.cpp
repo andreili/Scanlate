@@ -16,7 +16,23 @@ int main(int argc, char *argv[])
 
     MainWindow *w;
     QDesktopWidget *desktop = QApplication::desktop();
-    while (1)
+    int screenWidth;
+    int screenHeight;
+    int x, y;
+
+    w = new MainWindow(NULL);
+    screenWidth = desktop->width();
+    screenHeight = desktop->height();
+    x = (screenWidth - w->width()) / 2;
+    y = (screenHeight - w->height()) / 2;
+    w->move( x, y );
+    w->show();
+    w->setEnabled(false);
+
+    w->setEnabled(true);
+
+    return app.exec();
+    /*while (1)
     {
         LoginDialog loginDialog;
         loginDialog.exec();
@@ -27,7 +43,7 @@ int main(int argc, char *argv[])
             int screenHeight;
             int x, y;
 
-            w = new MainWindow(loginDialog.getServer(), loginDialog.getUser(), loginDialog.getToken());
+            w = new MainWindow(loginDialog.getServer());
             screenWidth = desktop->width();
             screenHeight = desktop->height();
             x = (screenWidth - w->width()) / 2;
@@ -45,7 +61,7 @@ int main(int argc, char *argv[])
             app.quit();
             return 1;
         }
-    }
+    }*/
 
     return 1;
 }

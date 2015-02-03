@@ -4,7 +4,8 @@
 #include <QMainWindow>
 #include <QtWidgets/QLabel>
 #include <QTreeWidgetItem>
-#include "qproject.h"
+#include "qscanlate.h"
+#include "qscanlateserver.h"
 
 namespace Ui {
 class MainWindow;
@@ -15,7 +16,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QString server, QString login, QString token, QWidget *parent = 0);
+    explicit MainWindow(QScanlateServer *server, QWidget *parent = 0);
     ~MainWindow();
 
     void setUser(QString login, QString token);
@@ -33,8 +34,10 @@ private:
     QTreeWidgetItem *m_finished_projects_root;
     QTreeWidgetItem *m_inactive_projects_root;
 
+    QScanlate *scanlate;
+
 Q_SIGNALS:
-    void UpdateProgress(int all, int completed);
+    void UpdateProgress(QString obj, int all, int completed);
 
 public Q_SLOTS:
     void LoadProjectsList();
