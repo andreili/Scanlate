@@ -16,7 +16,7 @@ LoadingWindow::LoadingWindow(QWidget *parent) :
     int y = (screenHeight - height()) / 2;
     move( x, y );
 
-    QMovie *movie = new QMovie("./loading.gif");
+    QMovie *movie = new QMovie(":/images/loading.gif");
     ui->lMovie->setMovie(movie);
     movie->start();
     ui->lMovie->setMaximumWidth(movie->frameRect().width());

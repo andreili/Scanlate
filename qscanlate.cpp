@@ -33,7 +33,7 @@ void QScanlate::UpdateProjectsList(QTableWidget *table)
                             "\"id\":\"1\","
                             "\"name\":\"AMG\","
                             "\"status\":\"0\","
-                            "\"cover\":\"amg.jpg\"},"
+                            "\"cover\":\"\"},"
                             "\"2\":{"
                             "\"id\":\"2\","
                             "\"name\":\"oO\","
@@ -43,7 +43,7 @@ void QScanlate::UpdateProjectsList(QTableWidget *table)
                             "\"id\":\"3\","
                             "\"name\":\"HBW\","
                             "\"status\":\"0\","
-                            "\"cover\":\"hbw.jpg\"}}}").object();
+                            "\"cover\":\"\"}}}").object();
 
     if ((projects.empty()) || (projects["error"].toInt() != 0) || (!projects.contains("projects")))
     {

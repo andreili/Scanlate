@@ -25,7 +25,7 @@ public:
 
 private:
     QString name;
-    QPixmap *cover;
+    QPixmap cover;
 
     QTableWidgetItem *tableCover;
     QTableWidgetItem *tableName;

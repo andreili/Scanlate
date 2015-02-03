@@ -21,20 +21,6 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="2">
-    <widget class="QLabel" name="lCounter">
-     <property name="text">
-      <string>#Counter</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="lMovie">
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
     <widget class="QLabel" name="lObject">
      <property name="minimumSize">
       <size>
@@ -47,7 +33,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="3">
+   <item row="1" column="4">
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -59,6 +45,20 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="lMovie">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="lCounter">
+     <property name="text">
+      <string>#Counter</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

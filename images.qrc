@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>loading.gif</file>
+        <file>no-cover.gif</file>
+    </qresource>
+</RCC>

@@ -33,8 +33,10 @@ FORMS    += mainwindow.ui \
     logindialog.ui \
     loadingwindow.ui
 
-OTHER_FILES += \
-    loading.gif
+OTHER_FILES +=
 
 CONFIG += c++11
 QMAKE_CXXFLAGS += -std=c++11
+
+RESOURCES += \
+    images.qrc

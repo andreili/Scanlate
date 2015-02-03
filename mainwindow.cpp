@@ -17,7 +17,7 @@ MainWindow::MainWindow(QScanlateServer *server, QWidget *parent) :
 
     /*LoadingWindow loadingWindow(this);
     connect(&loadingWindow, SIGNAL(loadingProc()), this, SLOT(LoadProjectsList()));
-    connect(this, SIGNAL(UpdateProgress(int,int)), &loadingWindow, SLOT(UpdateProgress(int,int)));
+    connect(this, SIGNAL(UpdateProgress(QString,int,int)), &loadingWindow, SLOT(UpdateProgress(QString,int,int)));
     loadingWindow.Start();
     loadingWindow.exec();*/
     scanlate->UpdateProjectsList(ui->twProjects);
