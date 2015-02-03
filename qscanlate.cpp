@@ -1,4 +1,5 @@
 #include <QMessageBox>
+#include <QJsonDocument>
 #include "qscanlate.h"
 
 QScanlate::QScanlate(QScanlateServer *server, QObject *parent) :
@@ -24,17 +25,33 @@ void QScanlate::UpdateUserInfo()
 
 void QScanlate::UpdateProjectsList(QTableWidget *table)
 {
-    QJsonObject projects = server->getProjectsList();
+    //QJsonObject projects = server->getProjectsList();
+    QJsonObject projects = QJsonDocument::fromJson("{\"error\":0,"
+                            "\"count\":3,"
+                            "\"projects\":{"
+                            "\"1\":{"
+                            "\"id\":\"1\","
+                            "\"name\":\"AMG\","
+                            "\"status\":\"0\","
+                            "\"cover\":\"amg.jpg\"},"
+                            "\"2\":{"
+                            "\"id\":\"2\","
+                            "\"name\":\"oO\","
+                            "\"status\":\"1\","
+                            "\"cover\":\"\"},"
+                            "\"3\":{"
+                            "\"id\":\"3\","
+                            "\"name\":\"HBW\","
+                            "\"status\":\"0\","
+                            "\"cover\":\"hbw.jpg\"}}}").object();
 
-    if (!projects.empty())
+    if ((projects.empty()) || (projects["error"].toInt() != 0) || (!projects.contains("projects")))
     {
-        if ((projects["error"].toInt() != 0) && (!projects.contains("projects")))
-        {
-            QMessageBox::critical(0, QObject::tr("Ошибка"),
-                                  QObject::tr("Невозможно получить список проектов."));
-            return;
-        }
+        QMessageBox::critical(0, QObject::tr("Ошибка"),
+                              QObject::tr("Невозможно получить список проектов."));
+        return;
     }
+    projects = projects["projects"].toObject();
     foreach (const QJsonValue &project_val, projects)
     {
         QScanlateProject *project = new QScanlateProject(project_val.toObject(), this);
