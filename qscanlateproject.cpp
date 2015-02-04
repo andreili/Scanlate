@@ -5,6 +5,11 @@ QScanlateProject::QScanlateProject(QJsonObject raw_data, QObject *parent) :
     QObject(parent)
 {
     this->name = raw_data["name"].toString();
+    this->lastActivies = raw_data["activies"].toString();
+    this->status = (ProjectStatus)raw_data["status"].toInt();
+    this->author = raw_data["author"].toString();
+    this->releaseDate = raw_data["release_date"].toInt();
+    this->description = raw_data["descr"].toString();
     if (raw_data["cover"].toString().isEmpty())
     {
         this->cover = QPixmap::fromImage(QImage(":/images/no-cover.gif"));
@@ -16,17 +21,13 @@ QScanlateProject::QScanlateProject(QJsonObject raw_data, QObject *parent) :
     }
 }
 
-void QScanlateProject::addToTable(QTableWidget *table)
+void QScanlateProject::addToTable(QTableWidget *table, int rowIdx)
 {
-    int rowIdx = table->rowCount();
-    table->setRowCount(table->rowCount() + 1);
-    table->setRowHeight(rowIdx, 220);
-    table->setColumnWidth(0, 160);
-
     tableCover = new QTableWidgetItem();
     tableCover->setData(Qt::DecorationRole, this->cover);
+    tableCover->setData(Qt::UserRole, this->id);
     table->setItem(rowIdx, 0, tableCover);
 
-    tableName = new QTableWidgetItem(name);
-    table->setItem(rowIdx, 1, tableName);
+    tableActivies = new QTableWidgetItem(this->lastActivies);
+    table->setItem(rowIdx, 1, tableActivies);
 }

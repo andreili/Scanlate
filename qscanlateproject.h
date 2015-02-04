@@ -5,6 +5,7 @@
 #include <QJsonObject>
 #include <QTableWidget>
 #include <QPixmap>
+#include <QDate>
 
 class QScanlateProject : public QObject
 {
@@ -14,21 +15,34 @@ public:
 
     enum ProjectStatus
     {
-        Active,
-        Inactive,
-        Finished
+        Active = 0,
+        Inactive = 1,
+        Finished = 2
     };
 
-    void addToTable(QTableWidget *table);
+    void addToTable(QTableWidget *table, int rowIdx);
 
-    ProjectStatus getStatus() { return ProjectStatus::Active; }
+    int getId() { return this->id; }
+    QString getName() { return this->name; }
+    ProjectStatus getStatus() { return this->status; }
+    QString getLastActivies() { return this->lastActivies; }
+    QString getAuthor() { return this->author; }
+    int getReleaseDate() { return this->releaseDate; }
+    QString getDescription() { return this->description; }
+    QPixmap getCover() { return this->cover; }
 
 private:
+    int id;
     QString name;
+    QString lastActivies;
     QPixmap cover;
+    ProjectStatus status;
+    QString author;
+    int releaseDate;
+    QString description;
 
     QTableWidgetItem *tableCover;
-    QTableWidgetItem *tableName;
+    QTableWidgetItem *tableActivies;
 
 signals:
 

@@ -39,6 +39,13 @@ QJsonObject QScanlateServer::getUserInfo()
     return query(url);
 }
 
+QJsonObject QScanlateServer::getUsersList()
+{
+    QUrl url(server_url + "/data.php");
+    url.setQuery("query=users_list");
+    return query(url);
+}
+
 QJsonObject QScanlateServer::getProjectsList()
 {
     QUrl url(server_url + "/data.php");

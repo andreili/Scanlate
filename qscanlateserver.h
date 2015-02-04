@@ -14,6 +14,7 @@ public:
     bool Login(QString username, QString password);
 
     QJsonObject getUserInfo();
+    QJsonObject getUsersList();
     QJsonObject getProjectsList();
 
 private:

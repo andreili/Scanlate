@@ -13,17 +13,17 @@ class QScanlate : public QObject
 public:
     explicit QScanlate(QScanlateServer *server, QObject *parent = 0);
 
-    void UpdateUserInfo();
+    void UpdateUserInfo(QScanlateUser *user);
+    void UpdateUsersList();
     void UpdateProjectsList(QTableWidget *table);
 
     bool isLogged();
 
-    QString getLogin() { return login; }
+    QScanlateProject* getProjectByID(int id);
 
 private:
-    QString login;
-
     QScanlateServer *server;
+    QList<QScanlateUser*> users;
     QList<QScanlateProject*> projects;
 
 signals:

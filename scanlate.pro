@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     qscanlateserver.cpp \
     qscanlateuser.cpp \
     qscanlate.cpp \
-    qscanlateproject.cpp
+    qscanlateproject.cpp \
+    projectproperties.cpp
 
 HEADERS  += mainwindow.h \
     logindialog.h \
@@ -27,11 +28,13 @@ HEADERS  += mainwindow.h \
     qscanlateserver.h \
     qscanlateuser.h \
     qscanlate.h \
-    qscanlateproject.h
+    qscanlateproject.h \
+    projectproperties.h
 
 FORMS    += mainwindow.ui \
     logindialog.ui \
-    loadingwindow.ui
+    loadingwindow.ui \
+    projectproperties.ui
 
 OTHER_FILES +=
 

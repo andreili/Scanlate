@@ -34,6 +34,7 @@ private:
     QTreeWidgetItem *m_finished_projects_root;
     QTreeWidgetItem *m_inactive_projects_root;
 
+    QScanlateUser *user;
     QScanlate *scanlate;
 
 Q_SIGNALS:
@@ -41,6 +42,8 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void LoadProjectsList();
+private slots:
+    void on_twProjects_doubleClicked(const QModelIndex &index);
 };
 
 #endif // MAINWINDOW_H
