@@ -17,12 +17,20 @@ public:
     ~ProjectProperties();
 
 private slots:
-    void on_pbChangeCover_pressed();
-
     void on_pbChangeCover_clicked();
+
+    void on_pbCancle_clicked();
+
+    void on_pbOK_clicked();
+
+Q_SIGNALS:
+    void UpdateProjectInfo(int projectID);
 
 private:
     Ui::ProjectProperties *ui;
+
+    QScanlateProject *project;
+    bool editable;
 };
 
 #endif // PROJECTPROPERTIES_H

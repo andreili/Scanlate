@@ -24,12 +24,22 @@ public:
 
     int getId() { return this->id; }
     QString getName() { return this->name; }
+    void setName(QString name) { this->name = name; }
+
     ProjectStatus getStatus() { return this->status; }
-    QString getLastActivies() { return this->lastActivies; }
+    void setStatus(ProjectStatus status) { this->status = status; }
+
     QString getAuthor() { return this->author; }
+    void setAuthor(QString author) { this->author = author; }
+
     int getReleaseDate() { return this->releaseDate; }
+    void setReleaseDate(int releaseDate) { this->releaseDate = releaseDate; }
+
     QString getDescription() { return this->description; }
+    void setDescription(QString description) { this->description = description; }
+
     QPixmap getCover() { return this->cover; }
+    void setCover(QPixmap cover) { this->cover = cover; }
 
 private:
     int id;

@@ -42,6 +42,8 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void LoadProjectsList();
+    void UpdateProjectInfo(int projectID);
+
 private slots:
     void on_twProjects_doubleClicked(const QModelIndex &index);
 };

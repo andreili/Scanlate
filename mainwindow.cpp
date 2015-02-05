@@ -55,6 +55,19 @@ void MainWindow::LoadProjectsList()
     emit UpdateProgress("", LOADING_STEPS, LOADING_STEPS + 1);
 }
 
+void MainWindow::UpdateProjectInfo(int projectID)
+{
+    if (projectID != -1)
+    {
+        int row = ui->twProjects->currentRow();
+        ui->twProjects->item(row, 0)->setData(Qt::DecorationRole, scanlate->getProjectByID(projectID)->getCover());
+    }
+    else
+    {
+        // adding a new project
+    }
+}
+
 void MainWindow::on_twProjects_doubleClicked(const QModelIndex &index)
 {
     int project_id = ui->twProjects->item(index.row(), 0)->data(Qt::UserRole).toInt();
@@ -67,6 +80,7 @@ void MainWindow::on_twProjects_doubleClicked(const QModelIndex &index)
         QScanlateProject *project = scanlate->getProjectByID(project_id);
         //ProjectProperties properties(project, this->user->isModerator(), this);
         ProjectProperties properties(project, true, this);
+        connect(&properties, SIGNAL(UpdateProjectInfo(int)), this, SLOT(UpdateProjectInfo(int)));
         properties.exec();
     }
 }
