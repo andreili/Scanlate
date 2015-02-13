@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "loadingwindow.h"
 #include "projectproperties.h"
+#include <QAction>
 #include <QMessageBox>
 #include <QStandardItemModel>
 
@@ -16,6 +17,8 @@ MainWindow::MainWindow(QScanlateServer *server, QWidget *parent) :
 
     m_login_label = new QLabel("");
     ui->statusBar->addWidget(m_login_label);
+    m_project_label = new QLabel("");
+    ui->statusBar->addWidget(m_project_label);
 
     /*LoadingWindow loadingWindow(this);
     connect(&loadingWindow, SIGNAL(loadingProc()), this, SLOT(LoadProjectsList()));
@@ -82,5 +85,38 @@ void MainWindow::on_twProjects_doubleClicked(const QModelIndex &index)
         ProjectProperties properties(project, true, this);
         connect(&properties, SIGNAL(UpdateProjectInfo(int)), this, SLOT(UpdateProjectInfo(int)));
         properties.exec();
+    }
+}
+
+void MainWindow::on_twProjects_customContextMenuRequested(const QPoint &pos)
+{
+    QMenu menu;
+    int project_id = ui->twProjects->item(ui->twProjects->currentRow(), 0)->data(Qt::UserRole).toInt();;
+    if (project_id == -1)
+    {
+        // add new item
+    }
+    else
+    {
+        menu.addAction(QObject::tr("&Выбрать активным"))->setData("active");
+    }
+
+    QAction* action;
+    if (pos != QPoint(0,0))
+    {
+        // Execute context menu
+        action =  menu.exec(ui->twProjects->viewport()->mapToGlobal(pos));
+    }
+    if(!action)
+    {
+        return;
+    }
+    else if (action->data().toString() == "active")
+    {
+        // set active project
+        QScanlateProject* project = this->scanlate->getProjectByID(project_id);
+        this->scanlate->setActiveProject(project);
+        m_project_label->setText(QObject::tr("Активный проект: ") + project->getName());
+        this->scanlate->getChaptersList(project);
     }
 }

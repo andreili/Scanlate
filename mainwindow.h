@@ -29,6 +29,7 @@ private:
     QString m_logged_as;
 
     QLabel *m_login_label;
+    QLabel *m_project_label;
 
     QTreeWidgetItem *m_active_projects_root;
     QTreeWidgetItem *m_finished_projects_root;
@@ -46,6 +47,7 @@ public Q_SLOTS:
 
 private slots:
     void on_twProjects_doubleClicked(const QModelIndex &index);
+    void on_twProjects_customContextMenuRequested(const QPoint &pos);
 };
 
 #endif // MAINWINDOW_H

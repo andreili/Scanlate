@@ -16,6 +16,7 @@ public:
     QJsonObject getUserInfo();
     QJsonObject getUsersList();
     QJsonObject getProjectsList();
+    QJsonObject getChaptersList(int project_id);
 
 private:
     QString server_url;

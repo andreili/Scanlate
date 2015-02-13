@@ -53,6 +53,13 @@ QJsonObject QScanlateServer::getProjectsList()
     return query(url);
 }
 
+QJsonObject QScanlateServer::getChaptersList(int project_id)
+{
+    QUrl url(server_url + "/data.php");
+    url.setQuery("query=chapters_list&project=" + QString::number(project_id));
+    return query(url);
+}
+
 QJsonObject QScanlateServer::query(QUrl url)
 {
     QEventLoop eventLoop;

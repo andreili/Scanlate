@@ -17,14 +17,20 @@ public:
     void UpdateUsersList();
     void UpdateProjectsList(QTableWidget *table);
 
+    void getChaptersList(QScanlateProject *project);
+
     bool isLogged();
 
     QScanlateProject* getProjectByID(int id);
+
+    QScanlateProject* getActiveProject() { return this->activeProject; }
+    void setActiveProject(QScanlateProject* new_val) { this->activeProject = new_val; }
 
 private:
     QScanlateServer *server;
     QList<QScanlateUser*> users;
     QList<QScanlateProject*> projects;
+    QScanlateProject* activeProject;
 
 signals:
 

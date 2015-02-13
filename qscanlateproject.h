@@ -6,6 +6,7 @@
 #include <QTableWidget>
 #include <QPixmap>
 #include <QDate>
+#include "qvolume.h"
 
 class QScanlateProject : public QObject
 {
@@ -41,6 +42,13 @@ public:
     QPixmap getCover() { return this->cover; }
     void setCover(QPixmap cover) { this->cover = cover; }
 
+    void parseVolumes(QJsonObject raw_data);
+
+    int getVolumesCount() { return this->volumes.count(); }
+
+    int getChaptersCount();
+    int getCompletedChaptersCount();
+
 private:
     int id;
     QString name;
@@ -53,6 +61,8 @@ private:
 
     QTableWidgetItem *tableCover;
     QTableWidgetItem *tableActivies;
+
+    QList<QVolume*> volumes;
 
 signals:
 

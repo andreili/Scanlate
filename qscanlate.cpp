@@ -6,6 +6,7 @@ QScanlate::QScanlate(QScanlateServer *server, QObject *parent) :
     QObject(parent)
 {
     this->server = server;
+    this->activeProject = NULL;
 }
 
 void QScanlate::UpdateUserInfo(QScanlateUser *user)
@@ -114,4 +115,22 @@ QScanlateProject *QScanlate::getProjectByID(int id)
     foreach (QScanlateProject *project, this->projects)
         if (project->getId() == id)
             return project;
+    return NULL;
+}
+
+void QScanlate::getChaptersList(QScanlateProject *project)
+{
+    //QJsonObject projects = server->getChaptersList(project->getId());
+    QJsonObject volumes = QJsonDocument::fromJson("{\"error\":0,\"count\":1,"
+                                                   "\"volumes\":{\"1\":{\"id\":1,\"num\":\"1\",\"name\":\"111111\",\"cover\":\"\",\"project_id\":\"1\","
+                                                   "\"chapters\":{\"1\":{\"id\":1,\"volume_id\":\"1\",\"num\":\"1\",\"name\":\"1\"},"
+                                                   "\"2\":{\"id\":2,\"volume_id\":\"1\",\"num\":\"2\",\"name\":\"2\"}}}}}").object();
+    if ((volumes.empty()) || (volumes["error"].toInt() != 0) || (!volumes.contains("volumes")))
+    {
+        QMessageBox::critical(0, QObject::tr("Ошибка"),
+                              QObject::tr("Невозможно получить список глав."));
+        return;
+    }
+
+    project->parseVolumes(volumes["volumes"].toObject());
 }

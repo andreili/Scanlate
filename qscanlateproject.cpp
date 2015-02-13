@@ -4,6 +4,7 @@
 QScanlateProject::QScanlateProject(QJsonObject raw_data, QObject *parent) :
     QObject(parent)
 {
+    this->id = raw_data["id"].toInt();
     this->name = raw_data["name"].toString();
     this->lastActivies = raw_data["activies"].toString();
     this->status = (ProjectStatus)raw_data["status"].toInt();
@@ -30,4 +31,29 @@ void QScanlateProject::addToTable(QTableWidget *table, int rowIdx)
 
     tableActivies = new QTableWidgetItem(this->lastActivies);
     table->setItem(rowIdx, 1, tableActivies);
+}
+
+void QScanlateProject::parseVolumes(QJsonObject raw_data)
+{
+    foreach (const QJsonValue &volume_val, raw_data)
+    {
+        QVolume *volume = new QVolume(volume_val.toObject(), this);
+        this->volumes.append(volume);
+    }
+}
+
+int QScanlateProject::getChaptersCount()
+{
+    int ret_val = 0;
+    foreach (QVolume *volume, volumes)
+        ret_val += volume->getChaptersCount();
+    return ret_val;
+}
+
+int QScanlateProject::getCompletedChaptersCount()
+{
+    int ret_val = 0;
+    foreach (QVolume *volume, volumes)
+        ret_val += volume->getCompletedChaptersCount();
+    return ret_val;
 }
