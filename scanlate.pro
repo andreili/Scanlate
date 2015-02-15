@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     qscanlateproject.cpp \
     projectproperties.cpp \
     qvolume.cpp \
-    qchapter.cpp
+    qchapter.cpp \
+    volumeproperties.cpp
 
 HEADERS  += mainwindow.h \
     logindialog.h \
@@ -33,12 +34,14 @@ HEADERS  += mainwindow.h \
     qscanlateproject.h \
     projectproperties.h \
     qvolume.h \
-    qchapter.h
+    qchapter.h \
+    volumeproperties.h
 
 FORMS    += mainwindow.ui \
     logindialog.ui \
     loadingwindow.ui \
-    projectproperties.ui
+    projectproperties.ui \
+    volumeproperties.ui
 
 OTHER_FILES +=
 
