@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QJsonObject>
 #include <QTableWidget>
+#include <QTreeWidget>
 #include <QPixmap>
 #include <QDate>
 #include "qvolume.h"
@@ -22,6 +23,8 @@ public:
     };
 
     void addToTable(QTableWidget *table, int rowIdx);
+
+    QVolume* getVolumeById(int id);
 
     int getId() { return this->id; }
     QString getName() { return this->name; }
@@ -42,7 +45,7 @@ public:
     QPixmap getCover() { return this->cover; }
     void setCover(QPixmap cover) { this->cover = cover; }
 
-    void parseVolumes(QJsonObject raw_data);
+    void parseVolumes(QJsonObject raw_data, QTreeWidget *volumes_tree);
 
     int getVolumesCount() { return this->volumes.count(); }
 

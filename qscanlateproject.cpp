@@ -33,13 +33,22 @@ void QScanlateProject::addToTable(QTableWidget *table, int rowIdx)
     table->setItem(rowIdx, 1, tableActivies);
 }
 
-void QScanlateProject::parseVolumes(QJsonObject raw_data)
+void QScanlateProject::parseVolumes(QJsonObject raw_data, QTreeWidget *volumes_tree)
 {
     foreach (const QJsonValue &volume_val, raw_data)
     {
         QVolume *volume = new QVolume(volume_val.toObject(), this);
+        volume->addToTree(volumes_tree);
         this->volumes.append(volume);
     }
+}
+
+QVolume* QScanlateProject::getVolumeById(int id)
+{
+    foreach (QVolume *volume, this->volumes)
+        if (volume->getId() == id)
+            return volume;
+    return NULL;
 }
 
 int QScanlateProject::getChaptersCount()

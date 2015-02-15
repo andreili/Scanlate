@@ -20,6 +20,8 @@ MainWindow::MainWindow(QScanlateServer *server, QWidget *parent) :
     m_project_label = new QLabel("");
     ui->statusBar->addWidget(m_project_label);
 
+    ui->twChapters->setEnabled(false);
+
     /*LoadingWindow loadingWindow(this);
     connect(&loadingWindow, SIGNAL(loadingProc()), this, SLOT(LoadProjectsList()));
     connect(this, SIGNAL(UpdateProgress(QString,int,int)), &loadingWindow, SLOT(UpdateProgress(QString,int,int)));
@@ -95,10 +97,13 @@ void MainWindow::on_twProjects_customContextMenuRequested(const QPoint &pos)
     if (project_id == -1)
     {
         // add new item
+        menu.addAction(QObject::tr("&Добавить проект"))->setData("addProject");
     }
     else
     {
-        menu.addAction(QObject::tr("&Выбрать активным"))->setData("active");
+        menu.addAction(QObject::tr("&Выбрать активным"))->setData("setActiveProject");
+        menu.addSeparator();
+        menu.addAction(QObject::tr("&Удалить"))->setData("delProject");
     }
 
     QAction* action;
@@ -111,12 +116,88 @@ void MainWindow::on_twProjects_customContextMenuRequested(const QPoint &pos)
     {
         return;
     }
-    else if (action->data().toString() == "active")
+    else if (action->data().toString() == "setActiveProject")
     {
-        // set active project
         QScanlateProject* project = this->scanlate->getProjectByID(project_id);
         this->scanlate->setActiveProject(project);
         m_project_label->setText(QObject::tr("Активный проект: ") + project->getName());
-        this->scanlate->getChaptersList(project);
+        this->scanlate->getChaptersList(project, ui->twChapters);
+        ui->twChapters->setEnabled(true);
+        ui->tabWidget->setCurrentIndex(ui->tabWidget->indexOf(ui->tab_chapters));
+    }
+    else if (action->data().toString() == "addProject")
+    {
+        // TODO
+    }
+    else if (action->data().toString() == "delProject")
+    {
+        // TODO
+    }
+}
+
+void MainWindow::on_twChapters_customContextMenuRequested(const QPoint &pos)
+{
+    QMenu menu;
+    int volume_id, chapter_id;
+
+    if (!ui->twChapters->currentItem()->parent())
+    {
+        // selected root item - volume
+        volume_id = ui->twChapters->currentItem()->data(0, Qt::UserRole).toInt();
+        chapter_id = -1;
+        menu.addAction(QObject::tr("&Добавить главу"))->setData("addChapter");
+        menu.addAction(QObject::tr("&Добавить том"))->setData("addVolume");
+        menu.addAction(QObject::tr("&Редактировать"))->setData("editVolume");
+        menu.addSeparator();
+        menu.addAction(QObject::tr("&Удалить"))->setData("delVolume");
+    }
+    else
+    {
+        // selected choldren item - chapter
+        volume_id = ui->twChapters->currentItem()->parent()->data(0, Qt::UserRole).toInt();
+        chapter_id = ui->twChapters->currentItem()->data(0, Qt::UserRole).toInt();
+        menu.addAction(QObject::tr("&Добавить главу"))->setData("addChapterEx");
+        menu.addAction(QObject::tr("&Редактировать"))->setData("editVolume");
+        menu.addSeparator();
+        menu.addAction(QObject::tr("&Удалить"))->setData("delChapter");
+    }
+
+    QVolume *volume = this->scanlate->getActiveProject()->getVolumeById(volume_id);
+    QChapter *chapter = volume->getChapterById(chapter_id);
+
+    QAction* action;
+    if (pos != QPoint(0,0))
+    {
+        // Execute context menu
+        action =  menu.exec(ui->twChapters->viewport()->mapToGlobal(pos));
+    }
+
+    if(!action)
+    {
+        return;
+    }
+    else if (action->data().toString() == "addChapter")
+    {
+        // TODO
+    }
+    else if (action->data().toString() == "addVolume")
+    {
+        // TODO
+    }
+    else if (action->data().toString() == "editVolume")
+    {
+        // TODO
+    }
+    else if (action->data().toString() == "delVolume")
+    {
+        // TODO
+    }
+    else if (action->data().toString() == "addChapterEx")
+    {
+        // TODO
+    }
+    else if (action->data().toString() == "delChapter")
+    {
+        // TODO
     }
 }

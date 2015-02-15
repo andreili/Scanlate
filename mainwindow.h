@@ -48,6 +48,7 @@ public Q_SLOTS:
 private slots:
     void on_twProjects_doubleClicked(const QModelIndex &index);
     void on_twProjects_customContextMenuRequested(const QPoint &pos);
+    void on_twChapters_customContextMenuRequested(const QPoint &pos);
 };
 
 #endif // MAINWINDOW_H

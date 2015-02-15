@@ -118,9 +118,9 @@ QScanlateProject *QScanlate::getProjectByID(int id)
     return NULL;
 }
 
-void QScanlate::getChaptersList(QScanlateProject *project)
+void QScanlate::getChaptersList(QScanlateProject *project, QTreeWidget *volumes_tree)
 {
-    //QJsonObject projects = server->getChaptersList(project->getId());
+    //QJsonObject volumes = server->getChaptersList(project->getId());
     QJsonObject volumes = QJsonDocument::fromJson("{\"error\":0,\"count\":1,"
                                                    "\"volumes\":{\"1\":{\"id\":1,\"num\":\"1\",\"name\":\"111111\",\"cover\":\"\",\"project_id\":\"1\","
                                                    "\"chapters\":{\"1\":{\"id\":1,\"volume_id\":\"1\",\"num\":\"1\",\"name\":\"1\"},"
@@ -132,5 +132,6 @@ void QScanlate::getChaptersList(QScanlateProject *project)
         return;
     }
 
-    project->parseVolumes(volumes["volumes"].toObject());
+    volumes_tree->clear();
+    project->parseVolumes(volumes["volumes"].toObject(), volumes_tree);
 }

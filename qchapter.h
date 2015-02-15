@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QJsonObject>
+#include <QTreeWidget>
 
 class QChapter : public QObject
 {
@@ -17,6 +18,8 @@ class QChapter : public QObject
 public:
     explicit QChapter(QJsonObject raw_data, QObject *parent = 0);
 
+    void addToTree(QTreeWidgetItem *parent);
+
     bool isCompleted() { return this->status == Finished; }
 
     int getId() { return this->id; }
@@ -30,6 +33,8 @@ private:
     QString name;
     int number;
     ChapterStatus status;
+
+    QTreeWidgetItem *treeItem;
 
 signals:
 

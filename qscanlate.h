@@ -17,7 +17,7 @@ public:
     void UpdateUsersList();
     void UpdateProjectsList(QTableWidget *table);
 
-    void getChaptersList(QScanlateProject *project);
+    void getChaptersList(QScanlateProject *project, QTreeWidget *volumes_tree);
 
     bool isLogged();
 

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QPixmap>
 #include <QJsonObject>
+#include <QTreeWidget>
 #include "qchapter.h"
 
 class QVolume : public QObject
@@ -11,6 +12,10 @@ class QVolume : public QObject
     Q_OBJECT
 public:
     explicit QVolume(QJsonObject raw_data, QObject *parent = 0);
+
+    void addToTree(QTreeWidget *tree);
+
+    QChapter* getChapterById(int id);
 
     int getChaptersCount() { return this->chapters.count(); }
     int getCompletedChaptersCount();
@@ -32,6 +37,8 @@ private:
     QString coverURL;
     QString name;
     int number;
+
+    QTreeWidgetItem *treeItem;
 
 signals:
 

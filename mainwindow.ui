@@ -21,7 +21,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_user">
        <attribute name="title">
@@ -137,13 +137,16 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="tab_chapters">
        <attribute name="title">
         <string>Главы</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
          <widget class="QTreeWidget" name="twChapters">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
           <column>
            <property name="text">
             <string>1</string>
@@ -193,7 +196,7 @@
      <x>0</x>
      <y>0</y>
      <width>814</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
