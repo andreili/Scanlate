@@ -15,7 +15,7 @@ MainWindow::MainWindow(QScanlateServer *server, QWidget *parent) :
 
     this->scanlate = new QScanlate(server, this);
 
-    m_login_label = new QLabel("");
+    m_login_label = new QLabel(this->scanlate->getUser()->getLogin());
     ui->statusBar->addWidget(m_login_label);
     m_network_label = new QLabel((this->scanlate->getMode() == QScanlateServer::NORNAL) ? "online" : "offline");
     ui->statusBar->addWidget(m_network_label);
@@ -177,6 +177,8 @@ void MainWindow::on_twChapters_customContextMenuRequested(const QPoint &pos)
         // selected children item - chapter
         volume_id = ui->twChapters->currentItem()->parent()->data(0, Qt::UserRole).toInt();
         chapter_id = ui->twChapters->currentItem()->data(0, Qt::UserRole).toInt();
+
+        menu.addAction(QObject::tr("&Выбрать активной"))->setData("setActive");
         menu.addAction(QObject::tr("&Добавить главу"))->setData("addChapterEx");
         menu.addAction(QObject::tr("&Редактировать"))->setData("editVolume");
         menu.addSeparator();
@@ -193,6 +195,11 @@ void MainWindow::on_twChapters_customContextMenuRequested(const QPoint &pos)
 
     if(!action)
         return;
+    else if (action->data().toString() == "setActive")
+    {
+        this->m_chapter_label->setText(QObject::tr("Глава: ") + QString::number(chapter->getNumber()));
+        // TODO
+    }
     else if (action->data().toString() == "addChapter")
     {
         // TODO
