@@ -13,7 +13,6 @@ MainWindow::MainWindow(QScanlateServer *server, QWidget *parent) :
     ui->setupUi(this);
 
     this->scanlate = new QScanlate(server, this);
-    this->user = new QScanlateUser();
 
     m_login_label = new QLabel("");
     ui->statusBar->addWidget(m_login_label);
@@ -22,13 +21,13 @@ MainWindow::MainWindow(QScanlateServer *server, QWidget *parent) :
 
     ui->twChapters->setEnabled(false);
 
-    /*LoadingWindow loadingWindow(this);
+    LoadingWindow loadingWindow(this);
     connect(&loadingWindow, SIGNAL(loadingProc()), this, SLOT(LoadProjectsList()));
     connect(this, SIGNAL(UpdateProgress(QString,int,int)), &loadingWindow, SLOT(UpdateProgress(QString,int,int)));
     loadingWindow.Start();
-    loadingWindow.exec();*/
-    scanlate->UpdateUsersList();
-    scanlate->UpdateProjectsList(ui->twProjects);
+    loadingWindow.exec();
+    //scanlate->UpdateUsersList();
+    //scanlate->UpdateProjectsList(ui->twProjects);
 }
 
 MainWindow::~MainWindow()
@@ -48,8 +47,8 @@ void MainWindow::setUser(QString login, QString token)
 void MainWindow::LoadProjectsList()
 {
     emit UpdateProgress(QObject::tr("Сведения о пользователе"), LOADING_STEPS, 1);
-    scanlate->UpdateUserInfo(this->user);
-    ui->lLogin->setText(this->user->getLogin());
+    scanlate->UpdateUserInfo();
+    ui->lLogin->setText(this->scanlate->getUser()->getLogin());
 
     emit UpdateProgress(QObject::tr("Список участников"), LOADING_STEPS, 2);
     scanlate->UpdateUsersList();
@@ -200,4 +199,14 @@ void MainWindow::on_twChapters_customContextMenuRequested(const QPoint &pos)
     {
         // TODO
     }
+}
+
+void MainWindow::saveState()
+{
+    scanlate->saveState("./data/");
+}
+
+void MainWindow::on_MainWindow_destroyed()
+{
+    scanlate->saveState("./data/");
 }

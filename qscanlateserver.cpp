@@ -13,7 +13,7 @@ QScanlateServer::QScanlateServer(QString server, QObject *parent) :
     server_url = server;
 }
 
-bool QScanlateServer::Login(QString username, QString password)
+QScanlateServer::LoginResult QScanlateServer::Login(QString username, QString password)
 {
     QUrl url(server_url + "/login.php");
     url.setQuery(QString("login=%1&password=%2").arg(username,
@@ -26,10 +26,21 @@ bool QScanlateServer::Login(QString username, QString password)
         if ((json_reply["error"].toInt() == 0) && (json_reply.contains("token")))
         {
             token = json_reply["token"].toString();
-            return true;
+            mode = NORNAL;
+            return LOGIN_OK;
+        }
+        else if (json_reply["error"].toInt() == 1024)
+        {
+            mode = OFFLINE;
+            return LOGIN_NO_CONNECTION;
         }
     }
-    return false;
+    return LOGIN_FAIL;
+}
+
+void QScanlateServer::setToken(QString new_token)
+{
+    this->token = new_token;
 }
 
 QJsonObject QScanlateServer::getUserInfo()
@@ -62,6 +73,9 @@ QJsonObject QScanlateServer::getChaptersList(int project_id)
 
 QJsonObject QScanlateServer::query(QUrl url)
 {
+    if (token.length())
+        url.setQuery(url.query() + "&token=" + token);
+
     QEventLoop eventLoop;
     QNetworkAccessManager mgr;
     QObject::connect(&mgr, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
@@ -86,6 +100,7 @@ QJsonObject QScanlateServer::query(QUrl url)
     else
     {
         QMessageBox::critical(NULL, QObject::tr("Ошибка подключения"), reply->errorString());
+        obj["error"] = 1024;
     }
     return obj;
 }

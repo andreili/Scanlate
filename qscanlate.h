@@ -13,9 +13,13 @@ class QScanlate : public QObject
 public:
     explicit QScanlate(QScanlateServer *server, QObject *parent = 0);
 
-    void UpdateUserInfo(QScanlateUser *user);
+    void saveState(QString directory);
+
+    void UpdateUserInfo();
     void UpdateUsersList();
     void UpdateProjectsList(QTableWidget *table);
+
+    QScanlateUser* getUser() { return this->user; }
 
     void getChaptersList(QScanlateProject *project, QTreeWidget *volumes_tree);
 
@@ -27,10 +31,12 @@ public:
     void setActiveProject(QScanlateProject* new_val) { this->activeProject = new_val; }
 
 private:
+    QScanlateServer::NetworkMode mode;
     QScanlateServer *server;
     QList<QScanlateUser*> users;
     QList<QScanlateProject*> projects;
     QScanlateProject* activeProject;
+    QScanlateUser *user;
 
 signals:
 

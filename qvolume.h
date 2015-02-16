@@ -11,7 +11,10 @@ class QVolume : public QObject
 {
     Q_OBJECT
 public:
-    explicit QVolume(QJsonObject raw_data, QObject *parent = 0);
+    explicit QVolume(QObject *parent = 0);
+
+    QJsonObject serialize();
+    void deserialize(QJsonObject raw_data);
 
     void addToTree(QTreeWidget *tree);
 

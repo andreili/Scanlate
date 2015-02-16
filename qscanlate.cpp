@@ -1,26 +1,99 @@
 #include <QMessageBox>
 #include <QJsonDocument>
+#include <QDir>
 #include "qscanlate.h"
+
+#define COVER_WIDTH 160
+#define COVER_HEIGHT 220
 
 QScanlate::QScanlate(QScanlateServer *server, QObject *parent) :
     QObject(parent)
 {
     this->server = server;
     this->activeProject = NULL;
+    this->user = new QScanlateUser();
+    this->mode = this->server->getMode();
 }
 
-void QScanlate::UpdateUserInfo(QScanlateUser *user)
+#define save_json(file_name, object) \
+{ \
+    data = QJsonDocument(object).toJson(); \
+    QFile file(file_name); \
+    file.open(QIODevice::WriteOnly); \
+    file.write(data); \
+    file.close(); \
+}
+
+#define save_list(prefix, file_name, obj_type, sub_name) \
+    if (!this->prefix ## s.empty()) \
+    { \
+        QJsonObject prefix ## s; \
+        QJsonObject prefix ## s_obj; \
+        foreach (obj_type *prefix, this->prefix ## s) \
+            prefix ## s_obj[QString::number(prefix->getId())] = prefix->serialize(); \
+        prefix ## s[sub_name] = prefix ## s_obj; \
+        save_json(directory + file_name, prefix ## s); \
+    }
+
+void QScanlate::saveState(QString directory)
 {
-    QJsonObject info_json = server->getUserInfo();
-    user->setInfo(info_json);
+    if (!QDir(directory).exists())
+        QDir().mkpath(directory);
+
+    QByteArray data;
+
+    save_list(user, "users.json", QScanlateUser, "users");
+    save_list(project, "projects.json", QScanlateProject, "projects");
+
+    if (this->activeProject)
+    {
+        QJsonObject volumes;
+        volumes["volumes"] = this->activeProject->serializeVolumes();
+        save_json(directory + "project_" + QString::number(this->activeProject->getId()) + ".json",
+                  volumes);
+    }
+
+    QJsonObject user = this->user->serialize();
+    user["token"] = this->server->getToken();
+    data = QJsonDocument(user).toJson();
+    QFile file_user(directory + "user.json");
+    file_user.open(QIODevice::WriteOnly);
+    file_user.write(data);
+    file_user.close();
+}
+
+#define read_json(file_name, ret_var) \
+{ \
+    QFile file(file_name); \
+    file.open(QIODevice::ReadOnly); \
+    QByteArray data = file.readAll(); \
+    ret_var = QJsonDocument::fromJson(data).object(); \
+}
+
+void QScanlate::UpdateUserInfo()
+{
+    QJsonObject info_json;
+    if (this->mode == QScanlateServer::NORNAL)
+        info_json = server->getUserInfo();
+    else
+    {
+        read_json("./data/user.json", info_json);
+        this->server->setToken(info_json["token"].toString());
+    }
+    this->user->deserialize(info_json);
 }
 
 void QScanlate::UpdateUsersList()
 {
-    //QJsonObject users = server->getUsersList();
-    QJsonObject users = QJsonDocument::fromJson("{\"error\":0,\"count\":1,\"users\":{\"1\":{\"id\":1,\"login\":\"andreil\","
-                                                "\"reg_date\":\"2015-01-23 09:10:27\",\"roles\":{\"1\":{\"id\":1,\"role\":0}}}}}").object();
-    if ((users.empty()) || (users["error"].toInt() != 0) || (!users.contains("users")))
+    QJsonObject users;
+    if (this->mode == QScanlateServer::NORNAL)
+        users = server->getUsersList();
+    else
+        read_json("./data/users.json", users);
+
+    if ((users.empty())
+            || (users["error"].toInt() != 0)
+            || (!users.contains("users")))
     {
         QMessageBox::critical(0, QObject::tr("Ошибка"),
                               QObject::tr("Невозможно получить список пользователей."));
@@ -30,7 +103,8 @@ void QScanlate::UpdateUsersList()
     users = users["users"].toObject();
     foreach (const QJsonValue &user_json, users)
     {
-        QScanlateUser *user = new QScanlateUser(user_json.toObject(), this);
+        QScanlateUser *user = new QScanlateUser(this);
+        user->deserialize(user_json.toObject());
         this->users.append(user);
     }
 }
@@ -50,36 +124,18 @@ void QScanlate::UpdateUsersList()
         { \
             row_idx = table->rowCount(); \
             table->setRowCount(row_idx + 1); \
-            table->setColumnWidth(0, bannerWidth); \
-            table->setRowHeight(row_idx, bannerHeight); \
+            table->setColumnWidth(0, COVER_WIDTH); \
+            table->setRowHeight(row_idx, COVER_HEIGHT); \
             project->addToTable(table, row_idx); \
         }
 
 void QScanlate::UpdateProjectsList(QTableWidget *table)
 {
-    //QJsonObject projects = server->getProjectsList();
-    QJsonObject projects = QJsonDocument::fromJson("{\"error\":0,"
-                            "\"count\":3,"
-                            "\"banner\":{\"width\":160,\"height\":220},"
-                            "\"projects\":{"
-                            "\"1\":{"
-                            "\"id\":1,"
-                            "\"name\":\"AMG\","
-                            "\"status\":0,"
-                            "\"cover\":\"\","
-                           "\"author\":\"Fujishima Kousuke\","
-                           "\"release_date\":1989,"
-                           "\"descr\":\"cfevfefefefe\ncevfndsvibdbhivg\"},"
-                            "\"2\":{"
-                            "\"id\":2,"
-                            "\"name\":\"oO\","
-                            "\"status\":1,"
-                            "\"cover\":\"\"},"
-                            "\"3\":{"
-                            "\"id\":3,"
-                            "\"name\":\"HBW\","
-                            "\"status\":2,"
-                            "\"cover\":\"\"}}}").object();
+    QJsonObject projects;
+    if (this->mode == QScanlateServer::NORNAL)
+        projects = server->getProjectsList();
+    else
+        read_json("./data/projects.json", projects);
 
     if ((projects.empty()) || (projects["error"].toInt() != 0) || (!projects.contains("projects")))
     {
@@ -87,13 +143,12 @@ void QScanlate::UpdateProjectsList(QTableWidget *table)
                               QObject::tr("Невозможно получить список проектов."));
         return;
     }
-    int bannerWidth = projects["banner"].toObject()["width"].toInt();
-    int bannerHeight = projects["banner"].toObject()["height"].toInt();
 
     projects = projects["projects"].toObject();
     foreach (const QJsonValue &project_val, projects)
     {
-        QScanlateProject *project = new QScanlateProject(project_val.toObject(), this);
+        QScanlateProject *project = new QScanlateProject(this);
+        project->deserialize(project_val.toObject());
         this->projects.append(project);
     }
 

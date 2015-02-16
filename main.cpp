@@ -16,23 +16,9 @@ int main(int argc, char *argv[])
 
     MainWindow *w;
     QDesktopWidget *desktop = QApplication::desktop();
-    int screenWidth;
-    int screenHeight;
-    int x, y;
+    int ret_val;
 
-    w = new MainWindow(NULL);
-    screenWidth = desktop->width();
-    screenHeight = desktop->height();
-    x = (screenWidth - w->width()) / 2;
-    y = (screenHeight - w->height()) / 2;
-    w->move( x, y );
-    w->show();
-    w->setEnabled(false);
-
-    w->setEnabled(true);
-
-    return app.exec();
-    /*while (1)
+    while (1)
     {
         LoginDialog loginDialog;
         loginDialog.exec();
@@ -54,14 +40,17 @@ int main(int argc, char *argv[])
 
             w->setEnabled(true);
 
-            return app.exec();
+            ret_val = app.exec();
+            w->saveState();
+            return ret_val;
+            break;
         case false:
             QMessageBox::critical(0, QObject::tr("Ошибка"),
                                   QObject::tr("Не выполнен вход пользователя!\nПрограмма будет закрыта."));
             app.quit();
             return 1;
         }
-    }*/
+    }
 
-    return 1;
+    return 0;
 }

@@ -1,8 +1,34 @@
 #include "qscanlateproject.h"
+#include <QBuffer>
 #include <QFile>
 
-QScanlateProject::QScanlateProject(QJsonObject raw_data, QObject *parent) :
+QScanlateProject::QScanlateProject(QObject *parent) :
     QObject(parent)
+{
+}
+
+QJsonObject QScanlateProject::serialize()
+{
+    QJsonObject ret_val;
+    ret_val["id"] = this->id;
+    ret_val["name"] = this->name;
+    ret_val["activies"] = this->lastActivies;
+    ret_val["status"] = this->status;
+    ret_val["author"] = this->author;
+    ret_val["release_date"] = this->releaseDate;
+    ret_val["descr"] = this->description;
+
+    QByteArray bytes;
+    QBuffer buffer(&bytes);
+    buffer.open(QIODevice::WriteOnly);
+    this->cover.save(&buffer, "PNG");
+    QString buffer_str = bytes.toBase64();
+    ret_val["cover"] = buffer_str;
+
+    return ret_val;
+}
+
+void QScanlateProject::deserialize(QJsonObject raw_data)
 {
     this->id = raw_data["id"].toInt();
     this->name = raw_data["name"].toString();
@@ -37,10 +63,21 @@ void QScanlateProject::parseVolumes(QJsonObject raw_data, QTreeWidget *volumes_t
 {
     foreach (const QJsonValue &volume_val, raw_data)
     {
-        QVolume *volume = new QVolume(volume_val.toObject(), this);
+        QVolume *volume = new QVolume(this);
+        volume->deserialize(volume_val.toObject());
         volume->addToTree(volumes_tree);
         this->volumes.append(volume);
     }
+}
+
+QJsonObject QScanlateProject::serializeVolumes()
+{
+    QJsonObject ret_val;
+    QJsonObject volumes_obj;
+    foreach (QVolume *volume, this->volumes)
+        volumes_obj[QString::number(volume->getId())] = volume->serialize();
+    ret_val["volumes"] = volumes_obj;
+    return ret_val;
 }
 
 QVolume* QScanlateProject::getVolumeById(int id)

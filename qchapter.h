@@ -16,7 +16,10 @@ class QChapter : public QObject
         Finished = 2
     };
 public:
-    explicit QChapter(QJsonObject raw_data, QObject *parent = 0);
+    explicit QChapter(QObject *parent = 0);
+
+    QJsonObject serialize();
+    void deserialize(QJsonObject raw_data);
 
     void addToTree(QTreeWidgetItem *parent);
 

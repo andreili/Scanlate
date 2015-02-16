@@ -10,7 +10,9 @@ class QScanlateUser : public QObject
     Q_OBJECT
 public:
     explicit QScanlateUser(QObject *parent = 0);
-    explicit QScanlateUser(QJsonObject raw_data, QObject *parent = 0);
+
+    QJsonObject serialize();
+    void deserialize(QJsonObject raw_data);
 
     enum Role
     {
@@ -25,12 +27,13 @@ public:
         Beta = 8
     };
 
-    void setInfo(QJsonObject raw_data);
+    int getId() { return this->id; }
 
     bool isModerator();
     QString getLogin() { return this->login; }
 
 private:
+    int id;
     QString login;
     QDateTime regDate;
     QList<Role> roles;

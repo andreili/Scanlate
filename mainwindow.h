@@ -21,6 +21,8 @@ public:
 
     void setUser(QString login, QString token);
 
+    void saveState();
+
 private:
     Ui::MainWindow *ui;
 
@@ -35,7 +37,6 @@ private:
     QTreeWidgetItem *m_finished_projects_root;
     QTreeWidgetItem *m_inactive_projects_root;
 
-    QScanlateUser *user;
     QScanlate *scanlate;
 
 Q_SIGNALS:
@@ -49,6 +50,7 @@ private slots:
     void on_twProjects_doubleClicked(const QModelIndex &index);
     void on_twProjects_customContextMenuRequested(const QPoint &pos);
     void on_twChapters_customContextMenuRequested(const QPoint &pos);
+    void on_MainWindow_destroyed();
 };
 
 #endif // MAINWINDOW_H

@@ -1,7 +1,26 @@
 #include "qvolume.h"
 
-QVolume::QVolume(QJsonObject raw_data, QObject *parent) :
+QVolume::QVolume(QObject *parent) :
     QObject(parent)
+{
+}
+
+QJsonObject QVolume::serialize()
+{
+    QJsonObject ret_val;
+    ret_val["id"] = this->id;
+    ret_val["cover"] = this->coverURL;  // TODO
+    ret_val["name"] = this->name;
+    ret_val["num"] = this->number;
+    QJsonObject chapters_obj;
+    foreach (QChapter *chapter, this->chapters)
+        chapters_obj[QString::number(chapter->getId())] = chapter->serialize();
+    ret_val["chapters"] = chapters_obj;
+
+    return ret_val;
+}
+
+void QVolume::deserialize(QJsonObject raw_data)
 {
     this->id = raw_data["id"].toInt();
     this->coverURL = raw_data["cover"].toString();
@@ -9,7 +28,8 @@ QVolume::QVolume(QJsonObject raw_data, QObject *parent) :
     this->number = raw_data["num"].toString().toInt();
     foreach (const QJsonValue &chapter_val, raw_data["chapters"].toObject())
     {
-        QChapter *chapter = new QChapter(chapter_val.toObject(), this);
+        QChapter *chapter = new QChapter(this);
+        chapter->deserialize(chapter_val.toObject());
         this->chapters.append(chapter);
     }
 }

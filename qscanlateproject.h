@@ -13,7 +13,10 @@ class QScanlateProject : public QObject
 {
     Q_OBJECT
 public:
-    explicit QScanlateProject(QJsonObject raw_data, QObject *parent = 0);
+    explicit QScanlateProject(QObject *parent = 0);
+
+    QJsonObject serialize();
+    void deserialize(QJsonObject raw_data);
 
     enum ProjectStatus
     {
@@ -46,6 +49,7 @@ public:
     void setCover(QPixmap cover) { this->cover = cover; }
 
     void parseVolumes(QJsonObject raw_data, QTreeWidget *volumes_tree);
+    QJsonObject serializeVolumes();
 
     int getVolumesCount() { return this->volumes.count(); }
 
