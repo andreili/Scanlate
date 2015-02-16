@@ -24,7 +24,7 @@ private slots:
     void on_pbOK_clicked();
 
 Q_SIGNALS:
-    void UpdateProjectInfo(int projectID);
+    void UpdateProjectInfo(QScanlateProject *project);
 
 private:
     Ui::ProjectProperties *ui;

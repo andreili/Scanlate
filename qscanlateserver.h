@@ -2,6 +2,7 @@
 #define QSCANLATESERVER_H
 
 #include <QJsonObject>
+#include <QUrlQuery>
 #include <QObject>
 #include <QUrl>
 
@@ -35,12 +36,15 @@ public:
     QJsonObject getProjectsList();
     QJsonObject getChaptersList(int project_id);
 
+    QJsonObject UpdateProjectInfo(int project_id, QJsonObject project_json);
+
 private:
     NetworkMode mode;
     QString server_url;
     QString token;
 
     QJsonObject query(QUrl url);
+    QJsonObject query(QUrl url, QUrlQuery params);
 
 signals:
 

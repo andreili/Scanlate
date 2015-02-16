@@ -37,7 +37,8 @@ void QVolume::deserialize(QJsonObject raw_data)
 void QVolume::addToTree(QTreeWidget *tree)
 {
     treeItem = new QTreeWidgetItem();
-    treeItem->setText(0, QObject::tr("Том ") + QString::number(this->number));
+    treeItem->setText(0, QObject::tr("Том ") + QString::number(this->number) +
+                      ((name.length()) ? " \"" + this->name + "\"" : ""));
     treeItem->setData(0, Qt::UserRole, this->id);
     tree->addTopLevelItem(treeItem);
     foreach (QChapter *chapter, this->chapters)

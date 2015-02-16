@@ -47,8 +47,7 @@ void QScanlate::saveState(QString directory)
 
     if (this->activeProject)
     {
-        QJsonObject volumes;
-        volumes["volumes"] = this->activeProject->serializeVolumes();
+        QJsonObject volumes = this->activeProject->serializeVolumes();
         save_json(directory + "project_" + QString::number(this->activeProject->getId()) + ".json",
                   volumes);
     }
@@ -137,7 +136,9 @@ void QScanlate::UpdateProjectsList(QTableWidget *table)
     else
         read_json("./data/projects.json", projects);
 
-    if ((projects.empty()) || (projects["error"].toInt() != 0) || (!projects.contains("projects")))
+    if ((projects.empty())
+            || (projects["error"].toInt() != 0)
+            || (!projects.contains("projects")))
     {
         QMessageBox::critical(0, QObject::tr("Ошибка"),
                               QObject::tr("Невозможно получить список проектов."));
@@ -165,6 +166,14 @@ void QScanlate::UpdateProjectsList(QTableWidget *table)
     InsertProjectsByStatus(QScanlateProject::ProjectStatus::Inactive);
 }
 
+void QScanlate::UpdateProjectInfo(QScanlateProject *project)
+{
+    if (this->mode == QScanlateServer::NORNAL)
+    {
+        this->server->UpdateProjectInfo(project->getId(), project->serialize());
+    }
+}
+
 QScanlateProject *QScanlate::getProjectByID(int id)
 {
     foreach (QScanlateProject *project, this->projects)
@@ -173,13 +182,19 @@ QScanlateProject *QScanlate::getProjectByID(int id)
     return NULL;
 }
 
+void QScanlate::addNewProject(QScanlateProject *project)
+{
+    this->projects.append(project);
+}
+
 void QScanlate::getChaptersList(QScanlateProject *project, QTreeWidget *volumes_tree)
 {
-    //QJsonObject volumes = server->getChaptersList(project->getId());
-    QJsonObject volumes = QJsonDocument::fromJson("{\"error\":0,\"count\":1,"
-                                                   "\"volumes\":{\"1\":{\"id\":1,\"num\":\"1\",\"name\":\"111111\",\"cover\":\"\",\"project_id\":\"1\","
-                                                   "\"chapters\":{\"1\":{\"id\":1,\"volume_id\":\"1\",\"num\":\"1\",\"name\":\"1\"},"
-                                                   "\"2\":{\"id\":2,\"volume_id\":\"1\",\"num\":\"2\",\"name\":\"2\"}}}}}").object();
+    QJsonObject volumes;
+    if (this->mode == QScanlateServer::NORNAL)
+        volumes = server->getChaptersList(project->getId());
+    else
+        read_json("./data/project_" + QString::number(this->activeProject->getId()) + ".json", volumes);
+
     if ((volumes.empty()) || (volumes["error"].toInt() != 0) || (!volumes.contains("volumes")))
     {
         QMessageBox::critical(0, QObject::tr("Ошибка"),

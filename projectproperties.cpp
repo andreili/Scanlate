@@ -82,7 +82,7 @@ void ProjectProperties::on_pbOK_clicked()
             this->project->setStatus(QScanlateProject::Finished);
             break;
         }
-        emit UpdateProjectInfo(this->project->getId());
+        emit UpdateProjectInfo(this->project);
     }
     close();
 }

@@ -31,7 +31,9 @@ private:
     QString m_logged_as;
 
     QLabel *m_login_label;
+    QLabel *m_network_label;
     QLabel *m_project_label;
+    QLabel *m_chapter_label;
 
     QTreeWidgetItem *m_active_projects_root;
     QTreeWidgetItem *m_finished_projects_root;
@@ -39,12 +41,14 @@ private:
 
     QScanlate *scanlate;
 
+    void setEnabledMenu(const QMenu &menu);
+
 Q_SIGNALS:
     void UpdateProgress(QString obj, int all, int completed);
 
 public Q_SLOTS:
     void LoadProjectsList();
-    void UpdateProjectInfo(int projectID);
+    void UpdateProjectInfo(QScanlateProject *project);
 
 private slots:
     void on_twProjects_doubleClicked(const QModelIndex &index);

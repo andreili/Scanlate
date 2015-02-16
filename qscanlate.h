@@ -19,6 +19,10 @@ public:
     void UpdateUsersList();
     void UpdateProjectsList(QTableWidget *table);
 
+    void UpdateProjectInfo(QScanlateProject *project);
+
+    QScanlateServer::NetworkMode getMode() { return this->mode; }
+
     QScanlateUser* getUser() { return this->user; }
 
     void getChaptersList(QScanlateProject *project, QTreeWidget *volumes_tree);
@@ -26,6 +30,7 @@ public:
     bool isLogged();
 
     QScanlateProject* getProjectByID(int id);
+    void addNewProject(QScanlateProject *project);
 
     QScanlateProject* getActiveProject() { return this->activeProject; }
     void setActiveProject(QScanlateProject* new_val) { this->activeProject = new_val; }

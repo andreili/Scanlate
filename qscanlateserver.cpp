@@ -71,6 +71,15 @@ QJsonObject QScanlateServer::getChaptersList(int project_id)
     return query(url);
 }
 
+QJsonObject QScanlateServer::UpdateProjectInfo(int project_id, QJsonObject project_json)
+{
+    QUrl url(server_url + "/data.php");
+    url.setQuery("query=update_project&project=" + QString::number(project_id));
+    QUrlQuery params;
+    params.addQueryItem("json", QJsonDocument(project_json).toJson());
+    return query(url, params);
+}
+
 QJsonObject QScanlateServer::query(QUrl url)
 {
     if (token.length())
@@ -82,6 +91,40 @@ QJsonObject QScanlateServer::query(QUrl url)
 
     QNetworkRequest req(url);
     QNetworkReply *reply = mgr.get(req);
+    eventLoop.exec();
+    //QObject::disconnect(&mgr, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
+
+    QJsonObject obj;
+    if (reply->error() == QNetworkReply::NoError)
+    {
+        obj = QJsonDocument::fromJson(reply->readAll()).object();
+        if (!obj.empty())
+        {
+            if ((obj["error"].toInt() == 0))
+            {
+                // TODO: Handling errors
+            }
+        }
+    }
+    else
+    {
+        QMessageBox::critical(NULL, QObject::tr("Ошибка подключения"), reply->errorString());
+        obj["error"] = 1024;
+    }
+    return obj;
+}
+
+QJsonObject QScanlateServer::query(QUrl url, QUrlQuery params)
+{
+    if (token.length())
+        url.setQuery(url.query() + "&token=" + token);
+
+    QEventLoop eventLoop;
+    QNetworkAccessManager mgr;
+    QObject::connect(&mgr, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
+
+    QNetworkRequest req(url);
+    QNetworkReply *reply = mgr.post(req, params.toString().toUtf8());
     eventLoop.exec();
     //QObject::disconnect(&mgr, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
 

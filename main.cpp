@@ -10,9 +10,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QTextCodec *utfCodec = QTextCodec::codecForName("UTF-8");
-   // QTextCodec::setCodecForTr(utfCodec);
     QTextCodec::setCodecForLocale(utfCodec);
-    //QTextCodec::setCodecForCStrings(utfCodec);
 
     MainWindow *w;
     QDesktopWidget *desktop = QApplication::desktop();
