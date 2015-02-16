@@ -10,7 +10,7 @@ QJsonObject QChapter::serialize()
     QJsonObject ret_val;
     ret_val["id"] = this->id;
     ret_val["name"] = this->name;
-    ret_val["num"] = this->number;
+    ret_val["num"] = QString::number(this->number);
     return ret_val;
 }
 
@@ -18,10 +18,7 @@ void QChapter::deserialize(QJsonObject raw_data)
 {
     this->id = raw_data["id"].toInt();
     this->name = raw_data["name"].toString();
-    if (raw_data["num"].isString())
-        this->number = raw_data["num"].toString().toInt();
-    else
-        this->number = raw_data["num"].toInt();
+    this->number = raw_data["num"].toString().toInt();
 }
 
 void QChapter::addToTree(QTreeWidgetItem *parent)

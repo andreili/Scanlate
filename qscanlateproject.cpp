@@ -15,7 +15,7 @@ QJsonObject QScanlateProject::serialize()
     ret_val["activies"] = this->lastActivies;
     ret_val["status"] = this->status;
     ret_val["author"] = this->author;
-    ret_val["release_date"] = this->releaseDate;
+    ret_val["release_date"] = QString::number(this->releaseDate);
     ret_val["descr"] = this->description;
 
     QByteArray bytes;
@@ -35,7 +35,7 @@ void QScanlateProject::deserialize(QJsonObject raw_data)
     this->lastActivies = raw_data["activies"].toString();
     this->status = (ProjectStatus)raw_data["status"].toInt();
     this->author = raw_data["author"].toString();
-    this->releaseDate = raw_data["release_date"].toInt();
+    this->releaseDate = raw_data["release_date"].toString().toInt();
     this->description = raw_data["descr"].toString();
     if (raw_data["cover"].toString().isEmpty())
     {
