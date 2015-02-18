@@ -90,16 +90,74 @@ void MainWindow::setEnabledMenu(const QMenu &menu)
     }
 }
 
+void MainWindow::addNewProjectDialog()
+{
+    QScanlateProject *project = new QScanlateProject();
+    project->deserialize(QJsonDocument::fromJson("{\"id\":-1}").object());
+    projectPropertiesDialog(project);
+}
+
+void MainWindow::projectPropertiesDialog(QScanlateProject *project)
+{
+    ProjectProperties properties(project, this->scanlate->getUser()->isModerator(), this);
+    connect(&properties, SIGNAL(UpdateProjectInfo(QScanlateProject*)),
+            this, SLOT(UpdateProjectInfo(QScanlateProject*)));
+    properties.exec();
+}
+
+void MainWindow::setActiveProject(QScanlateProject *project)
+{
+    this->scanlate->setActiveProject(project);
+    m_project_label->setText(QObject::tr("Активный проект: ") + project->getName());
+    this->scanlate->getChaptersList(project, ui->twChapters);
+    ui->twChapters->setEnabled(true);
+    ui->tabWidget->setCurrentIndex(ui->tabWidget->indexOf(ui->tab_chapters));
+}
+
+void MainWindow::deleteProject(QScanlateProject *project)
+{
+    // TODO
+}
+
+void MainWindow::addNewVolumeDialog()
+{
+    // TODO
+}
+
+void MainWindow::volumePropertiesDialog(QVolume *volume)
+{
+    // TODO
+}
+
+void MainWindow::deleteVolume(QVolume *volume)
+{
+    // TODO
+}
+
+void MainWindow::addNewChapterDialog(QVolume *volume)
+{
+    // TODO
+}
+
+void MainWindow::setActiveChapter(QChapter *chapter)
+{
+    this->m_chapter_label->setText(QObject::tr("Глава: ") + QString::number(chapter->getNumber()));
+    // TODO
+}
+
+void MainWindow::deleteChapter(QVolume *volume, QChapter *chapter)
+{
+    // TODO
+}
+
 void MainWindow::on_twProjects_doubleClicked(const QModelIndex &index)
 {
     int project_id = ui->twProjects->item(index.row(), 0)->data(Qt::UserRole).toInt();
-    QScanlateProject *project;
     if (project_id == -1)
     {
         if (this->scanlate->getMode() == QScanlateServer::NORNAL)
         {
-            project = new QScanlateProject();
-            project->deserialize(QJsonDocument::fromJson("{\"id\":-1}").object());
+            addNewProjectDialog();
         }
         else
         {
@@ -109,11 +167,7 @@ void MainWindow::on_twProjects_doubleClicked(const QModelIndex &index)
         }
     }
     else
-        project = scanlate->getProjectByID(project_id);
-    ProjectProperties properties(project, this->scanlate->getUser()->isModerator(), this);
-    connect(&properties, SIGNAL(UpdateProjectInfo(QScanlateProject*)),
-            this, SLOT(UpdateProjectInfo(QScanlateProject*)));
-    properties.exec();
+        projectPropertiesDialog(scanlate->getProjectByID(project_id));
 }
 
 void MainWindow::on_twProjects_customContextMenuRequested(const QPoint &pos)
@@ -126,8 +180,10 @@ void MainWindow::on_twProjects_customContextMenuRequested(const QPoint &pos)
     }
     else
     {
+        menu.addAction(QObject::tr("&Свойства"))->setData("propertiesProject");
         menu.addAction(QObject::tr("&Выбрать активным"))->setData("setActiveProject");
         menu.addSeparator();
+        menu.addAction(QObject::tr("&Добавить проект"))->setData("addProject");
         menu.addAction(QObject::tr("&Удалить"))->setData("delProject");
     }
     this->setEnabledMenu(menu);
@@ -135,25 +191,18 @@ void MainWindow::on_twProjects_customContextMenuRequested(const QPoint &pos)
     QAction* action;
     if (pos != QPoint(0,0))
         action =  menu.exec(ui->twProjects->viewport()->mapToGlobal(pos));
+
+    QScanlateProject *project = this->scanlate->getProjectByID(project_id);
     if(!action)
         return;
     else if (action->data().toString() == "setActiveProject")
-    {
-        QScanlateProject* project = this->scanlate->getProjectByID(project_id);
-        this->scanlate->setActiveProject(project);
-        m_project_label->setText(QObject::tr("Активный проект: ") + project->getName());
-        this->scanlate->getChaptersList(project, ui->twChapters);
-        ui->twChapters->setEnabled(true);
-        ui->tabWidget->setCurrentIndex(ui->tabWidget->indexOf(ui->tab_chapters));
-    }
+        setActiveProject(project);
+    else if (action->data().toString() == "propertiesProject")
+        projectPropertiesDialog(project);
     else if (action->data().toString() == "addProject")
-    {
-        // TODO
-    }
+        addNewProjectDialog();
     else if (action->data().toString() == "delProject")
-    {
-        // TODO
-    }
+        deleteProject(project);
 }
 
 void MainWindow::on_twChapters_customContextMenuRequested(const QPoint &pos)
@@ -196,34 +245,17 @@ void MainWindow::on_twChapters_customContextMenuRequested(const QPoint &pos)
     if(!action)
         return;
     else if (action->data().toString() == "setActive")
-    {
-        this->m_chapter_label->setText(QObject::tr("Глава: ") + QString::number(chapter->getNumber()));
-        // TODO
-    }
-    else if (action->data().toString() == "addChapter")
-    {
-        // TODO
-    }
+        setActiveChapter(chapter);
+    else if ((action->data().toString() == "addChapter") || (action->data().toString() == "addChapterEx"))
+        addNewChapterDialog(volume);
     else if (action->data().toString() == "addVolume")
-    {
-        // TODO
-    }
+        addNewVolumeDialog();
     else if (action->data().toString() == "editVolume")
-    {
-        // TODO
-    }
+        volumePropertiesDialog(volume);
     else if (action->data().toString() == "delVolume")
-    {
-        // TODO
-    }
-    else if (action->data().toString() == "addChapterEx")
-    {
-        // TODO
-    }
+        deleteVolume(volume);
     else if (action->data().toString() == "delChapter")
-    {
-        // TODO
-    }
+        deleteChapter(volume, chapter);
 }
 
 void MainWindow::saveState()

@@ -43,6 +43,19 @@ private:
 
     void setEnabledMenu(const QMenu &menu);
 
+    void addNewProjectDialog();
+    void projectPropertiesDialog(QScanlateProject *project);
+    void setActiveProject(QScanlateProject *project);
+    void deleteProject(QScanlateProject *project);
+
+    void addNewVolumeDialog();
+    void volumePropertiesDialog(QVolume *volume);
+    void deleteVolume(QVolume *volume);
+
+    void addNewChapterDialog(QVolume *volume);
+    void setActiveChapter(QChapter *chapter);
+    void deleteChapter(QVolume *volume, QChapter *chapter);
+
 Q_SIGNALS:
     void UpdateProgress(QString obj, int all, int completed);
 
