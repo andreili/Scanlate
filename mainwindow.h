@@ -44,12 +44,12 @@ private:
     void setEnabledMenu(const QMenu &menu);
 
     void addNewProjectDialog();
-    bool projectPropertiesDialog(QScanlateProject *project);
+    void projectPropertiesDialog(QScanlateProject *project);
     void setActiveProject(QScanlateProject *project);
     void deleteProject(QScanlateProject *project);
 
     void addNewVolumeDialog();
-    bool volumePropertiesDialog(QVolume *volume, QChapter *chapter = NULL);
+    void volumePropertiesDialog(QVolume *volume, QChapter *chapter = NULL);
     void deleteVolume(QVolume *volume);
 
     void addNewChapterDialog(QVolume *volume);

@@ -70,6 +70,7 @@ void ProjectProperties::on_pbOK_clicked()
         this->project->setAuthor(ui->leAuthor->text());
         this->project->setReleaseDate(ui->cbReleaseDate->currentText().toInt());
         this->project->setCover(*ui->lCover->pixmap());
+        this->project->setDescription(ui->teDescription->toPlainText());
         switch (ui->cbStatus->currentIndex())
         {
         case 0:

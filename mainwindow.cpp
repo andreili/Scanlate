@@ -97,17 +97,15 @@ void MainWindow::addNewProjectDialog()
 {
     QScanlateProject *project = new QScanlateProject();
     project->deserialize(QJsonDocument::fromJson("{\"id\":-1}").object());
-    if (projectPropertiesDialog(project))
-        this->scanlate->addNewProject(project, this->ui->twProjects);
+    projectPropertiesDialog(project);
 }
 
-bool MainWindow::projectPropertiesDialog(QScanlateProject *project)
+void MainWindow::projectPropertiesDialog(QScanlateProject *project)
 {
     ProjectProperties properties(project, this->scanlate->getUser()->isModerator(), this);
     connect(&properties, SIGNAL(UpdateProjectInfo(QScanlateProject*)),
             this, SLOT(UpdateProjectInfo(QScanlateProject*)));
-    properties.show();
-    return (properties.result() == QDialog::DialogCode::Accepted);
+    properties.exec();
 }
 
 void MainWindow::setActiveProject(QScanlateProject *project)
@@ -128,17 +126,15 @@ void MainWindow::addNewVolumeDialog()
 {
     QVolume *volume = new QVolume();
     volume->deserialize(QJsonDocument::fromJson("{\"id\":-1}").object());
-    if (volumePropertiesDialog(volume))
-        this->scanlate->addNewVolume(volume, this->ui->twChapters);
+    volumePropertiesDialog(volume);
 }
 
-bool MainWindow::volumePropertiesDialog(QVolume *volume, QChapter *chapter)
+void MainWindow::volumePropertiesDialog(QVolume *volume, QChapter *chapter)
 {
     VolumeProperties properties(volume, chapter, this);
     connect(&properties, SIGNAL(UpdateVolumeInfo(QVolume*)),
             this, SLOT(UpdateVolumeInfo(QVolume*,)));
     properties.show();
-    return (properties.result() == QDialog::DialogCode::Accepted);
 }
 
 void MainWindow::deleteVolume(QVolume *volume)
@@ -167,7 +163,7 @@ void MainWindow::deleteChapter(QVolume *volume, QChapter *chapter)
 
 void MainWindow::on_twProjects_doubleClicked(const QModelIndex &index)
 {
-    int project_id = ui->twProjects->item(index.row(), 0)->data(Qt::UserRole).toInt();
+    int project_id = ui->twProjects->item(index.row(), 0)->data(Qt::UserRole).toInt();  // TODO: SIGSEG для нового проекта
     if (project_id == -1)
     {
         if (this->scanlate->getMode() == QScanlateServer::NORNAL)
