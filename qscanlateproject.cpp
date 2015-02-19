@@ -50,13 +50,21 @@ void QScanlateProject::deserialize(QJsonObject raw_data)
 
 void QScanlateProject::addToTable(QTableWidget *table, int rowIdx)
 {
-    tableCover = new QTableWidgetItem();
-    tableCover->setData(Qt::DecorationRole, this->cover);
-    tableCover->setData(Qt::UserRole, this->id);
-    table->setItem(rowIdx, 0, tableCover);
+    this->tableCover = new QTableWidgetItem();
+    this->tableCover->setData(Qt::DecorationRole, this->cover);
+    this->tableCover->setData(Qt::UserRole, this->id);
+    table->setItem(rowIdx, 0, this->tableCover);
 
-    tableActivies = new QTableWidgetItem(this->lastActivies);
-    table->setItem(rowIdx, 1, tableActivies);
+    this->tableActivies = new QTableWidgetItem(this->lastActivies);
+    table->setItem(rowIdx, 1, this->tableActivies);
+}
+
+void QScanlateProject::updateOnTable()
+{
+    this->tableCover = new QTableWidgetItem();
+    this->tableCover->setData(Qt::DecorationRole, this->cover);
+
+    this->tableActivies = new QTableWidgetItem(this->lastActivies);
 }
 
 void QScanlateProject::parseVolumes(QJsonObject raw_data, QTreeWidget *volumes_tree)

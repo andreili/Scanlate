@@ -15,10 +15,11 @@ public:
 
     void saveState(QString directory);
 
-    void UpdateUserInfo();
-    void UpdateUsersList();
-    void UpdateProjectsList(QTableWidget *table);
+    void getUserInfo();
+    void getUsersList();
+    void getProjectsList(QTableWidget *table);
 
+    void updateProjectsTable(QTableWidget *table);
     void UpdateProjectInfo(QScanlateProject *project);
 
     QScanlateServer::NetworkMode getMode() { return this->mode; }

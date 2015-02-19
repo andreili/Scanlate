@@ -80,6 +80,15 @@ QJsonObject QScanlateServer::UpdateProjectInfo(int project_id, QJsonObject proje
     return query(url, params);
 }
 
+QJsonObject QScanlateServer::addNewProject(QJsonObject project_json)
+{
+    QUrl url(server_url + "/data.php");
+    url.setQuery("query=add_project");
+    QUrlQuery params;
+    params.addQueryItem("json", QJsonDocument(project_json).toJson());
+    return query(url, params);
+}
+
 QJsonObject QScanlateServer::query(QUrl url)
 {
     if (token.length())

@@ -26,6 +26,7 @@ public:
     };
 
     void addToTable(QTableWidget *table, int rowIdx);
+    void updateOnTable();
 
     QVolume* getVolumeById(int id);
 

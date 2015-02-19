@@ -69,7 +69,7 @@ void QScanlate::saveState(QString directory)
     ret_var = QJsonDocument::fromJson(data).object(); \
 }
 
-void QScanlate::UpdateUserInfo()
+void QScanlate::getUserInfo()
 {
     QJsonObject info_json;
     if (this->mode == QScanlateServer::NORNAL)
@@ -82,7 +82,7 @@ void QScanlate::UpdateUserInfo()
     this->user->deserialize(info_json);
 }
 
-void QScanlate::UpdateUsersList()
+void QScanlate::getUsersList()
 {
     QJsonObject users;
     if (this->mode == QScanlateServer::NORNAL)
@@ -128,7 +128,7 @@ void QScanlate::UpdateUsersList()
             project->addToTable(table, row_idx); \
         }
 
-void QScanlate::UpdateProjectsList(QTableWidget *table)
+void QScanlate::getProjectsList(QTableWidget *table)
 {
     QJsonObject projects;
     if (this->mode == QScanlateServer::NORNAL)
@@ -153,6 +153,11 @@ void QScanlate::UpdateProjectsList(QTableWidget *table)
         this->projects.append(project);
     }
 
+    updateProjectsTable(table);
+}
+
+void QScanlate::updateProjectsTable(QTableWidget *table)
+{
     table->clear();
     table->setColumnCount(2);
 
@@ -171,6 +176,16 @@ void QScanlate::UpdateProjectInfo(QScanlateProject *project)
     if (this->mode == QScanlateServer::NORNAL)
     {
         this->server->UpdateProjectInfo(project->getId(), project->serialize());
+        project->updateOnTable();
+    }
+}
+
+void QScanlate::addNewProject(QScanlateProject *project)
+{
+    if (this->mode == QScanlateServer::NORNAL)
+    {
+        project->deserialize(this->server->addNewProject(project->serialize()));
+        this->projects.append(project);
     }
 }
 
@@ -180,11 +195,6 @@ QScanlateProject *QScanlate::getProjectByID(int id)
         if (project->getId() == id)
             return project;
     return NULL;
-}
-
-void QScanlate::addNewProject(QScanlateProject *project)
-{
-    this->projects.append(project);
 }
 
 void QScanlate::getChaptersList(QScanlateProject *project, QTreeWidget *volumes_tree)

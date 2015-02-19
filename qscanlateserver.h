@@ -37,6 +37,7 @@ public:
     QJsonObject getChaptersList(int project_id);
 
     QJsonObject UpdateProjectInfo(int project_id, QJsonObject project_json);
+    QJsonObject addNewProject(QJsonObject project_json);
 
 private:
     NetworkMode mode;

@@ -50,14 +50,14 @@ void MainWindow::setUser(QString login, QString token)
 void MainWindow::LoadProjectsList()
 {
     emit UpdateProgress(QObject::tr("Сведения о пользователе"), LOADING_STEPS, 1);
-    scanlate->UpdateUserInfo();
+    scanlate->getUserInfo();
     ui->lLogin->setText(this->scanlate->getUser()->getLogin());
 
     emit UpdateProgress(QObject::tr("Список участников"), LOADING_STEPS, 2);
-    scanlate->UpdateUsersList();
+    scanlate->getUsersList();
 
     emit UpdateProgress(QObject::tr("Список проектов"), LOADING_STEPS, 3);
-    scanlate->UpdateProjectsList(ui->twProjects);
+    scanlate->getProjectsList(ui->twProjects);
 
     emit UpdateProgress("", LOADING_STEPS, LOADING_STEPS + 1);
 }
@@ -73,7 +73,7 @@ void MainWindow::UpdateProjectInfo(QScanlateProject *project)
     else
     {
         this->scanlate->addNewProject(project);
-        scanlate->UpdateProjectsList(ui->twProjects);
+        scanlate->updateProjectsTable(ui->twProjects);
     }
 }
 
