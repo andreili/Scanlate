@@ -206,6 +206,8 @@ void MainWindow::on_twProjects_customContextMenuRequested(const QPoint &pos)
     QAction* action;
     if (pos != QPoint(0,0))
         action =  menu.exec(ui->twProjects->viewport()->mapToGlobal(pos));
+    else
+        return;
 
     QScanlateProject *project = this->scanlate->getProjectByID(project_id);
     if(!action)
@@ -256,6 +258,8 @@ void MainWindow::on_twChapters_customContextMenuRequested(const QPoint &pos)
     QAction* action;
     if (pos != QPoint(0,0))
         action =  menu.exec(ui->twChapters->viewport()->mapToGlobal(pos));
+    else
+        return;
 
     if(!action)
         return;
