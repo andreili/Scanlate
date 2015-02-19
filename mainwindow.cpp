@@ -72,8 +72,7 @@ void MainWindow::UpdateProjectInfo(QScanlateProject *project)
     }
     else
     {
-        this->scanlate->addNewProject(project);
-        scanlate->updateProjectsTable(ui->twProjects);
+        this->scanlate->addNewProject(project, ui->twProjects);
     }
 }
 
@@ -97,12 +96,13 @@ void MainWindow::addNewProjectDialog()
     projectPropertiesDialog(project);
 }
 
-void MainWindow::projectPropertiesDialog(QScanlateProject *project)
+bool MainWindow::projectPropertiesDialog(QScanlateProject *project)
 {
     ProjectProperties properties(project, this->scanlate->getUser()->isModerator(), this);
     connect(&properties, SIGNAL(UpdateProjectInfo(QScanlateProject*)),
             this, SLOT(UpdateProjectInfo(QScanlateProject*)));
-    properties.exec();
+    properties.show();
+    return (properties.result() == QDialog::DialogCode::Accepted);
 }
 
 void MainWindow::setActiveProject(QScanlateProject *project)

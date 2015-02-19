@@ -109,13 +109,22 @@ void QScanlate::getUsersList()
 }
 
 #define InsertSpaceRow(Title) \
+{ \
     row_idx = table->rowCount(); \
     table->setRowCount(table->rowCount() + 1); \
     space_item = new QTableWidgetItem(Title); \
     space_item->setTextAlignment(Qt::AlignCenter); \
     space_item->setData(Qt::UserRole, -1); \
     table->setItem(row_idx, 0, space_item); \
-    table->setSpan(row_idx, 0, 1, table->columnCount());
+    table->setSpan(row_idx, 0, 1, table->columnCount()); \
+}
+
+#define InsertProjectToRow(project, row) \
+{ \
+    table->setColumnWidth(0, COVER_WIDTH); \
+    table->setRowHeight(row, COVER_HEIGHT); \
+    project->addToTable(table, row); \
+}
 
 #define InsertProjectsByStatus(status) \
     foreach (QScanlateProject *project, this->projects) \
@@ -123,9 +132,7 @@ void QScanlate::getUsersList()
         { \
             row_idx = table->rowCount(); \
             table->setRowCount(row_idx + 1); \
-            table->setColumnWidth(0, COVER_WIDTH); \
-            table->setRowHeight(row_idx, COVER_HEIGHT); \
-            project->addToTable(table, row_idx); \
+            InsertProjectToRow(project, row_idx); \
         }
 
 void QScanlate::getProjectsList(QTableWidget *table)
@@ -165,27 +172,67 @@ void QScanlate::updateProjectsTable(QTableWidget *table)
     int row_idx;
     InsertSpaceRow(QObject::tr("Активные проекты"));
     InsertProjectsByStatus(QScanlateProject::ProjectStatus::Active);
+    this->lastActiveProjectRow = row_idx;
     InsertSpaceRow(QObject::tr("Завершенные проекты"));
     InsertProjectsByStatus(QScanlateProject::ProjectStatus::Finished);
+    this->lastFinishedProjectRow = row_idx;
     InsertSpaceRow(QObject::tr("Неактивные проекты"));
     InsertProjectsByStatus(QScanlateProject::ProjectStatus::Inactive);
+    this->lastInactiveProjectRow = row_idx;
 }
 
 void QScanlate::UpdateProjectInfo(QScanlateProject *project)
 {
     if (this->mode == QScanlateServer::NORNAL)
     {
-        this->server->UpdateProjectInfo(project->getId(), project->serialize());
+        QJsonObject project_info = this->server->UpdateProjectInfo(project->getId(), project->serialize());
+
+        if ((project_info.empty()) || (project_info["error"].toInt() != 0))
+        {
+            QMessageBox::critical(0, QObject::tr("Ошибка"),
+                                  QObject::tr("Невозможно обновить информацию о проекте на сервере!"));
+            return;
+        }
+
+        project->deserialize(project_info);
         project->updateOnTable();
     }
 }
 
-void QScanlate::addNewProject(QScanlateProject *project)
+void QScanlate::addNewProject(QScanlateProject *project, QTableWidget *table)
 {
     if (this->mode == QScanlateServer::NORNAL)
     {
-        project->deserialize(this->server->addNewProject(project->serialize()));
+        QJsonObject project_info = this->server->addNewProject(project->serialize());
+
+        if ((project_info.empty()) || (project_info["error"].toInt() != 0))
+        {
+            QMessageBox::critical(0, QObject::tr("Ошибка"),
+                                  QObject::tr("Невозможно добавить новый проект на сервер!"));
+            return;
+        }
+
+        project->deserialize(project_info);
         this->projects.append(project);
+
+        switch (project->getStatus())
+        {
+        case QScanlateProject::ProjectStatus::Active:
+            table->insertRow(this->lastActiveProjectRow);
+            InsertProjectToRow(project, this->lastActiveProjectRow++);
+            this->lastFinishedProjectRow++;
+            this->lastInactiveProjectRow++;
+            break;
+        case QScanlateProject::ProjectStatus::Finished:
+            table->insertRow(this->lastFinishedProjectRow);
+            InsertProjectToRow(project, this->lastFinishedProjectRow++);
+            this->lastInactiveProjectRow++;
+            break;
+        case QScanlateProject::ProjectStatus::Inactive:
+            table->insertRow(this->lastInactiveProjectRow);
+            InsertProjectToRow(project, this->lastInactiveProjectRow++);
+            break;
+        }
     }
 }
 

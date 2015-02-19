@@ -31,7 +31,7 @@ public:
     bool isLogged();
 
     QScanlateProject* getProjectByID(int id);
-    void addNewProject(QScanlateProject *project);
+    void addNewProject(QScanlateProject *project, QTableWidget *table);
 
     QScanlateProject* getActiveProject() { return this->activeProject; }
     void setActiveProject(QScanlateProject* new_val) { this->activeProject = new_val; }
@@ -43,6 +43,10 @@ private:
     QList<QScanlateProject*> projects;
     QScanlateProject* activeProject;
     QScanlateUser *user;
+
+    int lastActiveProjectRow;
+    int lastInactiveProjectRow;
+    int lastFinishedProjectRow;
 
 signals:
 

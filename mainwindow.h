@@ -44,7 +44,7 @@ private:
     void setEnabledMenu(const QMenu &menu);
 
     void addNewProjectDialog();
-    void projectPropertiesDialog(QScanlateProject *project);
+    bool projectPropertiesDialog(QScanlateProject *project);
     void setActiveProject(QScanlateProject *project);
     void deleteProject(QScanlateProject *project);
 
