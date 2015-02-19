@@ -191,24 +191,6 @@ void QScanlate::updateProjectsTable(QTableWidget *table)
     this->lastInactiveProjectRow = row_idx;
 }
 
-void QScanlate::UpdateProjectInfo(QScanlateProject *project)
-{
-    if (this->mode == QScanlateServer::NORNAL)
-    {
-        QJsonObject project_info = this->server->UpdateProjectInfo(project->getId(), project->serialize());
-
-        if ((project_info.empty()) || (project_info["error"].toInt() != 0))
-        {
-            QMessageBox::critical(0, QObject::tr("Ошибка"),
-                                  QObject::tr("Невозможно обновить информацию о проекте на сервере!"));
-            return;
-        }
-
-        project->deserialize(project_info);
-        project->updateOnTable();
-    }
-}
-
 void QScanlate::addNewProject(QScanlateProject *project, QTableWidget *table)
 {
     if (this->mode == QScanlateServer::NORNAL)
@@ -246,6 +228,24 @@ void QScanlate::addNewProject(QScanlateProject *project, QTableWidget *table)
     }
 }
 
+void QScanlate::UpdateProjectInfo(QScanlateProject *project)
+{
+    if (this->mode == QScanlateServer::NORNAL)
+    {
+        QJsonObject project_info = this->server->UpdateProjectInfo(project->serialize());
+
+        if ((project_info.empty()) || (project_info["error"].toInt() != 0))
+        {
+            QMessageBox::critical(0, QObject::tr("Ошибка"),
+                                  QObject::tr("Невозможно обновить информацию о проекте на сервере!"));
+            return;
+        }
+
+        project->deserialize(project_info);
+        project->updateOnTable();
+    }
+}
+
 void QScanlate::deleteProject(QScanlateProject *project)
 {
     if (this->mode == QScanlateServer::NORNAL)
@@ -261,6 +261,42 @@ void QScanlate::deleteProject(QScanlateProject *project)
 
         this->projects.removeOne(project);
         delete project;
+    }
+}
+
+void QScanlate::addNewVolume(QVolume *volume, QTreeWidget *volumes_tree)
+{
+    if (this->mode == QScanlateServer::NORNAL)
+    {
+        QJsonObject volume_info = this->server->addNewVolume(volume->serialize(), this->activeProject->getId());
+
+        if ((volume_info.empty()) || (volume_info["error"].toInt() != 0))
+        {
+            QMessageBox::critical(0, QObject::tr("Ошибка"),
+                                  QObject::tr("Невозможно добавить новый том на сервере!"));
+            return;
+        }
+
+        volume->deserialize(volume_info);
+        this->activeProject->addNewVolume(volume, volumes_tree);
+    }
+}
+
+void QScanlate::updateVolumeInfo(QVolume *volume)
+{
+    if (this->mode == QScanlateServer::NORNAL)
+    {
+        QJsonObject volume_info = this->server->updateVolumeInfo(volume->serialize(), this->activeProject->getId());
+
+        if ((volume_info.empty()) || (volume_info["error"].toInt() != 0))
+        {
+            QMessageBox::critical(0, QObject::tr("Ошибка"),
+                                  QObject::tr("Невозможно обновить информацию о томе на сервере!"));
+            return;
+        }
+
+        volume->deserialize(volume_info);
+        volume->updateOnTree();
     }
 }
 

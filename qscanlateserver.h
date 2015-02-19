@@ -36,9 +36,12 @@ public:
     QJsonObject getProjectsList();
     QJsonObject getChaptersList(int project_id);
 
-    QJsonObject UpdateProjectInfo(int project_id, QJsonObject project_json);
+    QJsonObject UpdateProjectInfo(QJsonObject project_json);
     QJsonObject addNewProject(QJsonObject project_json);
     QJsonObject deleteProject(int project_id);
+
+    QJsonObject addNewVolume(QJsonObject volume_json, int project_id);
+    QJsonObject updateVolumeInfo(QJsonObject volume_json, int project_id);
 
 private:
     NetworkMode mode;

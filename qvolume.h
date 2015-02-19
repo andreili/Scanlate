@@ -18,6 +18,7 @@ public:
     void deserialize(QJsonObject raw_data);
 
     void addToTree(QTreeWidget *tree);
+    void updateOnTree();
 
     QChapter* getChapterById(int id);
 

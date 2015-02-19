@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "loadingwindow.h"
 #include "projectproperties.h"
+#include "volumeproperties.h"
 #include <QAction>
 #include <QMessageBox>
 #include <QJsonDocument>
@@ -65,16 +66,18 @@ void MainWindow::LoadProjectsList()
 
 void MainWindow::UpdateProjectInfo(QScanlateProject *project)
 {
-    this->scanlate->UpdateProjectInfo(project);
     if (project->getId() != -1)
-    {
-        int row = ui->twProjects->currentRow();
-        ui->twProjects->item(row, 0)->setData(Qt::DecorationRole, project->getCover());
-    }
+        this->scanlate->UpdateProjectInfo(project);
     else
-    {
         this->scanlate->addNewProject(project, ui->twProjects);
-    }
+}
+
+void MainWindow::UpdateVolumeInfo(QVolume *volume)
+{
+    if (volume->getId() != -1)
+        this->scanlate->updateVolumeInfo(volume);
+    else
+        this->scanlate->addNewVolume(volume, this->ui->twChapters);
 }
 
 void MainWindow::setEnabledMenu(const QMenu &menu)
@@ -94,7 +97,8 @@ void MainWindow::addNewProjectDialog()
 {
     QScanlateProject *project = new QScanlateProject();
     project->deserialize(QJsonDocument::fromJson("{\"id\":-1}").object());
-    projectPropertiesDialog(project);
+    if (projectPropertiesDialog(project))
+        this->scanlate->addNewProject(project, this->ui->twProjects);
 }
 
 bool MainWindow::projectPropertiesDialog(QScanlateProject *project)
@@ -122,12 +126,19 @@ void MainWindow::deleteProject(QScanlateProject *project)
 
 void MainWindow::addNewVolumeDialog()
 {
-    // TODO
+    QVolume *volume = new QVolume();
+    volume->deserialize(QJsonDocument::fromJson("{\"id\":-1}").object());
+    if (volumePropertiesDialog(volume))
+        this->scanlate->addNewVolume(volume, this->ui->twChapters);
 }
 
-void MainWindow::volumePropertiesDialog(QVolume *volume)
+bool MainWindow::volumePropertiesDialog(QVolume *volume, QChapter *chapter)
 {
-    // TODO
+    VolumeProperties properties(volume, chapter, this);
+    connect(&properties, SIGNAL(UpdateVolumeInfo(QVolume*)),
+            this, SLOT(UpdateVolumeInfo(QVolume*,)));
+    properties.show();
+    return (properties.result() == QDialog::DialogCode::Accepted);
 }
 
 void MainWindow::deleteVolume(QVolume *volume)
@@ -137,7 +148,10 @@ void MainWindow::deleteVolume(QVolume *volume)
 
 void MainWindow::addNewChapterDialog(QVolume *volume)
 {
-    // TODO
+    QChapter *chapter = new QChapter();
+    chapter->deserialize(QJsonDocument::fromJson("{\"id\":-1}").object());
+    //if (volumePropertiesDialog(volume, chapter))
+        //
 }
 
 void MainWindow::setActiveChapter(QChapter *chapter)

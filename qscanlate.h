@@ -21,7 +21,6 @@ public:
     void getProjectsList(QTableWidget *table);
 
     void updateProjectsTable(QTableWidget *table);
-    void UpdateProjectInfo(QScanlateProject *project);
 
     QScanlateServer::NetworkMode getMode() { return this->mode; }
 
@@ -35,7 +34,11 @@ public:
     QScanlateProject* getProjectByID(int id);
     // call with project contains ID is a -1
     void addNewProject(QScanlateProject *project, QTableWidget *table);
+    void UpdateProjectInfo(QScanlateProject *project);
     void deleteProject(QScanlateProject *project);
+
+    void addNewVolume(QVolume *volume, QTreeWidget *volumes_tree);
+    void updateVolumeInfo(QVolume *volume);
 
     QScanlateProject* getActiveProject() { return this->activeProject; }
     void setActiveProject(QScanlateProject* new_val) { this->activeProject = new_val; }

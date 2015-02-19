@@ -58,6 +58,8 @@ public:
     int getChaptersCount();
     int getCompletedChaptersCount();
 
+    void addNewVolume(QVolume *volume, QTreeWidget *volumes_tree);
+
 private:
     int id;
     QString name;

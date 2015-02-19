@@ -120,3 +120,9 @@ int QScanlateProject::getCompletedChaptersCount()
         ret_val += volume->getCompletedChaptersCount();
     return ret_val;
 }
+
+void QScanlateProject::addNewVolume(QVolume *volume, QTreeWidget *volumes_tree)
+{
+    volume->addToTree(volumes_tree);
+    this->volumes.append(volume);
+}

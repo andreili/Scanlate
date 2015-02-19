@@ -71,10 +71,10 @@ QJsonObject QScanlateServer::getChaptersList(int project_id)
     return query(url);
 }
 
-QJsonObject QScanlateServer::UpdateProjectInfo(int project_id, QJsonObject project_json)
+QJsonObject QScanlateServer::UpdateProjectInfo(QJsonObject project_json)
 {
     QUrl url(server_url + "/data.php");
-    url.setQuery("query=update_project&project=" + QString::number(project_id));
+    url.setQuery("query=update_project");
     QUrlQuery params;
     params.addQueryItem("json", QJsonDocument(project_json).toJson());
     return query(url, params);
@@ -94,6 +94,24 @@ QJsonObject QScanlateServer::deleteProject(int project_id)
     QUrl url(server_url + "/data.php");
     url.setQuery("query=del_project&project=" + QString::number(project_id));
     return query(url);
+}
+
+QJsonObject QScanlateServer::addNewVolume(QJsonObject volume_json, int project_id)
+{
+    QUrl url(server_url + "/data.php");
+    url.setQuery("query=add_volume&project=" + QString::number(project_id));
+    QUrlQuery params;
+    params.addQueryItem("json", QJsonDocument(volume_json).toJson());
+    return query(url, params);
+}
+
+QJsonObject QScanlateServer::updateVolumeInfo(QJsonObject volume_json, int project_id)
+{
+    QUrl url(server_url + "/data.php");
+    url.setQuery("query=update_volume&project=" + QString::number(project_id));
+    QUrlQuery params;
+    params.addQueryItem("json", QJsonDocument(volume_json).toJson());
+    return query(url, params);
 }
 
 QJsonObject QScanlateServer::query(QUrl url)

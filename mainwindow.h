@@ -49,7 +49,7 @@ private:
     void deleteProject(QScanlateProject *project);
 
     void addNewVolumeDialog();
-    void volumePropertiesDialog(QVolume *volume);
+    bool volumePropertiesDialog(QVolume *volume, QChapter *chapter = NULL);
     void deleteVolume(QVolume *volume);
 
     void addNewChapterDialog(QVolume *volume);
@@ -62,6 +62,7 @@ Q_SIGNALS:
 public Q_SLOTS:
     void LoadProjectsList();
     void UpdateProjectInfo(QScanlateProject *project);
+    void UpdateVolumeInfo(QVolume *volume);
 
 private slots:
     void on_twProjects_doubleClicked(const QModelIndex &index);

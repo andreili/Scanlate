@@ -53,6 +53,19 @@ void QVolume::addToTree(QTreeWidget *tree)
         chapter->addToTree(treeItem);
 }
 
+void QVolume::updateOnTree()
+{
+    int child_count = treeItem->childCount();
+    if (child_count > 0)
+        for (int i=0 ; i<child_count ; i++)
+            treeItem->removeChild(treeItem->child(i));
+
+    treeItem->setText(0, QObject::tr("Том ") + QString::number(this->number) +
+                      ((name.length()) ? " \"" + this->name + "\"" : ""));
+    foreach (QChapter *chapter, this->chapters)
+        chapter->addToTree(treeItem);
+}
+
 QChapter* QVolume::getChapterById(int id)
 {
     foreach (QChapter *chapter, this->chapters)
