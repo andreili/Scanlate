@@ -117,7 +117,7 @@ void MainWindow::setActiveProject(QScanlateProject *project)
 
 void MainWindow::deleteProject(QScanlateProject *project)
 {
-    // TODO
+    this->scanlate->deleteProject(project);
 }
 
 void MainWindow::addNewVolumeDialog()

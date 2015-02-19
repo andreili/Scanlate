@@ -89,6 +89,13 @@ QJsonObject QScanlateServer::addNewProject(QJsonObject project_json)
     return query(url, params);
 }
 
+QJsonObject QScanlateServer::deleteProject(int project_id)
+{
+    QUrl url(server_url + "/data.php");
+    url.setQuery("query=del_project&project=" + QString::number(project_id));
+    return query(url);
+}
+
 QJsonObject QScanlateServer::query(QUrl url)
 {
     if (token.length())

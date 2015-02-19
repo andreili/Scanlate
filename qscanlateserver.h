@@ -38,6 +38,7 @@ public:
 
     QJsonObject UpdateProjectInfo(int project_id, QJsonObject project_json);
     QJsonObject addNewProject(QJsonObject project_json);
+    QJsonObject deleteProject(int project_id);
 
 private:
     NetworkMode mode;

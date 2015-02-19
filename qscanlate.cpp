@@ -246,6 +246,24 @@ void QScanlate::addNewProject(QScanlateProject *project, QTableWidget *table)
     }
 }
 
+void QScanlate::deleteProject(QScanlateProject *project)
+{
+    if (this->mode == QScanlateServer::NORNAL)
+    {
+        QJsonObject del_result = this->server->deleteProject(project->getId());
+
+        if ((del_result.empty()) || (del_result["error"].toInt() != 0))
+        {
+            QMessageBox::critical(0, QObject::tr("Ошибка"),
+                                  QObject::tr("Невозможно удалить проект на сервере!"));
+            return;
+        }
+
+        this->projects.removeOne(project);
+        delete project;
+    }
+}
+
 QScanlateProject *QScanlate::getProjectByID(int id)
 {
     foreach (QScanlateProject *project, this->projects)

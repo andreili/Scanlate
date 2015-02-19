@@ -31,8 +31,11 @@ public:
 
     bool isLogged();
 
+    /* Project managment */
     QScanlateProject* getProjectByID(int id);
+    // call with project contains ID is a -1
     void addNewProject(QScanlateProject *project, QTableWidget *table);
+    void deleteProject(QScanlateProject *project);
 
     QScanlateProject* getActiveProject() { return this->activeProject; }
     void setActiveProject(QScanlateProject* new_val) { this->activeProject = new_val; }
