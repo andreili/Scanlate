@@ -39,7 +39,13 @@ void LoginDialog::slotAcceptLogin()
             switch (QMessageBox::question(this, QObject::tr("Ошибка"), QObject::tr("Отсутствует подключение к серверу!\nПродолжить в автономном режиме?")))
             {
             case QMessageBox::Yes:
-                m_logged = true;
+                if ((QFile("./data/projects.json").exists()) && (QFile("./data/users.json").exists()))
+                    m_logged = true;
+                else
+                {
+                    QMessageBox::critical(this, QObject::tr("Ошибка"), QObject::tr("Отсутствуют данные, необходимые для автономного режима!"));
+                    m_logged = false;
+                }
                 break;
             default:
                 m_logged = false;
