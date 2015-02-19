@@ -12,6 +12,7 @@ class QScanlate : public QObject
     Q_OBJECT
 public:
     explicit QScanlate(QScanlateServer *server, QObject *parent = 0);
+    ~QScanlate();
 
     void saveState(QString directory);
 

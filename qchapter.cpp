@@ -5,6 +5,12 @@ QChapter::QChapter(QObject *parent) :
 {
 }
 
+QChapter::~QChapter()
+{
+    // TODO: delete from tree
+    //
+}
+
 QJsonObject QChapter::serialize()
 {
     QJsonObject ret_val;

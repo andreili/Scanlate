@@ -28,6 +28,15 @@ QJsonObject QScanlateProject::serialize()
     return ret_val;
 }
 
+QScanlateProject::~QScanlateProject()
+{
+    this->tableCover->tableWidget()->removeRow(tableCover->row());
+    delete this->tableCover;
+    delete this->tableActivies;
+    foreach (QVolume *volume, this->volumes)
+        delete volume;
+}
+
 void QScanlateProject::deserialize(QJsonObject raw_data)
 {
     this->id = raw_data["id"].toInt();

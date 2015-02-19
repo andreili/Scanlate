@@ -6,6 +6,10 @@ QScanlateUser::QScanlateUser(QObject *parent) :
 {
 }
 
+QScanlateUser::~QScanlateUser()
+{
+}
+
 #define SQL_DATE_FORMAT "yyyy-MM-dd hh:mm:ss"
 
 QJsonObject QScanlateUser::serialize()

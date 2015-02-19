@@ -35,6 +35,7 @@ MainWindow::MainWindow(QScanlateServer *server, QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    delete this->scanlate;
     delete ui;
 }
 

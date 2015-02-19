@@ -17,6 +17,7 @@ class QChapter : public QObject
     };
 public:
     explicit QChapter(QObject *parent = 0);
+    ~QChapter();
 
     QJsonObject serialize();
     void deserialize(QJsonObject raw_data);

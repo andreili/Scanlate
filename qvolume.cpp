@@ -20,6 +20,14 @@ QJsonObject QVolume::serialize()
     return ret_val;
 }
 
+QVolume::~QVolume()
+{
+    // TODO: delete from tree
+    //
+    foreach (QChapter *chapter, this->chapters)
+        delete chapter;
+}
+
 void QVolume::deserialize(QJsonObject raw_data)
 {
     this->id = raw_data["id"].toInt();

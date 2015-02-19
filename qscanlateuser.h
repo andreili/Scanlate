@@ -10,6 +10,7 @@ class QScanlateUser : public QObject
     Q_OBJECT
 public:
     explicit QScanlateUser(QObject *parent = 0);
+    ~QScanlateUser();
 
     QJsonObject serialize();
     void deserialize(QJsonObject raw_data);

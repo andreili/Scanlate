@@ -14,6 +14,7 @@ class QScanlateProject : public QObject
     Q_OBJECT
 public:
     explicit QScanlateProject(QObject *parent = 0);
+    ~QScanlateProject();
 
     QJsonObject serialize();
     void deserialize(QJsonObject raw_data);

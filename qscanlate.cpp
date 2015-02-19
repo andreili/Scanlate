@@ -15,6 +15,16 @@ QScanlate::QScanlate(QScanlateServer *server, QObject *parent) :
     this->mode = this->server->getMode();
 }
 
+QScanlate::~QScanlate()
+{
+    delete this->server;
+    foreach (QScanlateUser *user, this->users)
+        delete user;
+    delete this->user;
+    foreach (QScanlateProject *project, this->projects)
+        delete project;
+}
+
 #define save_json(file_name, object) \
 { \
     data = QJsonDocument(object).toJson(); \

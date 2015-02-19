@@ -12,6 +12,7 @@ class QVolume : public QObject
     Q_OBJECT
 public:
     explicit QVolume(QObject *parent = 0);
+    ~QVolume();
 
     QJsonObject serialize();
     void deserialize(QJsonObject raw_data);
