@@ -75,7 +75,9 @@ void MainWindow::UpdateProjectInfo(QScanlateProject *project)
 void MainWindow::UpdateVolumeInfo(QVolume *volume)
 {
     if (volume->getId() != -1)
+    {
         this->scanlate->updateVolumeInfo(volume);
+    }
     else
         this->scanlate->addNewVolume(volume, this->ui->twChapters);
 }
@@ -117,11 +119,6 @@ void MainWindow::setActiveProject(QScanlateProject *project)
     ui->tabWidget->setCurrentIndex(ui->tabWidget->indexOf(ui->tab_chapters));
 }
 
-void MainWindow::deleteProject(QScanlateProject *project)
-{
-    this->scanlate->deleteProject(project);
-}
-
 void MainWindow::addNewVolumeDialog()
 {
     QVolume *volume = new QVolume();
@@ -129,35 +126,17 @@ void MainWindow::addNewVolumeDialog()
     volumePropertiesDialog(volume);
 }
 
-void MainWindow::volumePropertiesDialog(QVolume *volume, QChapter *chapter)
+void MainWindow::volumePropertiesDialog(QVolume *volume)
 {
-    VolumeProperties properties(volume, chapter, this);
+    VolumeProperties properties(volume, this);
     connect(&properties, SIGNAL(UpdateVolumeInfo(QVolume*)),
             this, SLOT(UpdateVolumeInfo(QVolume*,)));
-    properties.show();
-}
-
-void MainWindow::deleteVolume(QVolume *volume)
-{
-    // TODO
-}
-
-void MainWindow::addNewChapterDialog(QVolume *volume)
-{
-    QChapter *chapter = new QChapter();
-    chapter->deserialize(QJsonDocument::fromJson("{\"id\":-1}").object());
-    //if (volumePropertiesDialog(volume, chapter))
-        //
+    properties.exec();
 }
 
 void MainWindow::setActiveChapter(QChapter *chapter)
 {
     this->m_chapter_label->setText(QObject::tr("Глава: ") + QString::number(chapter->getNumber()));
-    // TODO
-}
-
-void MainWindow::deleteChapter(QVolume *volume, QChapter *chapter)
-{
     // TODO
 }
 
@@ -215,7 +194,7 @@ void MainWindow::on_twProjects_customContextMenuRequested(const QPoint &pos)
     else if (action->data().toString() == "addProject")
         addNewProjectDialog();
     else if (action->data().toString() == "delProject")
-        deleteProject(project);
+        this->scanlate->deleteProject(project);
 }
 
 void MainWindow::on_twChapters_customContextMenuRequested(const QPoint &pos)
@@ -262,15 +241,15 @@ void MainWindow::on_twChapters_customContextMenuRequested(const QPoint &pos)
     else if (action->data().toString() == "setActive")
         setActiveChapter(chapter);
     else if ((action->data().toString() == "addChapter") || (action->data().toString() == "addChapterEx"))
-        addNewChapterDialog(volume);
+        volumePropertiesDialog(volume);
     else if (action->data().toString() == "addVolume")
         addNewVolumeDialog();
     else if (action->data().toString() == "editVolume")
         volumePropertiesDialog(volume);
     else if (action->data().toString() == "delVolume")
-        deleteVolume(volume);
+        this->scanlate->deleteVolume(volume);
     else if (action->data().toString() == "delChapter")
-        deleteChapter(volume, chapter);
+        this->scanlate->deleteChapter(chapter);
 }
 
 void MainWindow::saveState()

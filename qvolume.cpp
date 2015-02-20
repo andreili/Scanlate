@@ -40,6 +40,10 @@ void QVolume::deserialize(QJsonObject raw_data)
         chapter->deserialize(chapter_val.toObject());
         this->chapters.append(chapter);
     }
+    //if (!loaded cover)
+    {
+        this->cover = QPixmap::fromImage(QImage(":/images/no-cover.gif"));
+    }
 }
 
 void QVolume::addToTree(QTreeWidget *tree)
@@ -66,12 +70,23 @@ void QVolume::updateOnTree()
         chapter->addToTree(treeItem);
 }
 
+void QVolume::removeFromTree()
+{
+    treeItem->treeWidget()->removeItemWidget(treeItem, 0);
+    delete treeItem;
+}
+
 QChapter* QVolume::getChapterById(int id)
 {
     foreach (QChapter *chapter, this->chapters)
         if (chapter->getId() == id)
             return chapter;
     return NULL;
+}
+
+QChapter* QVolume::getChapter(int idx)
+{
+    return this->chapters.at(idx);
 }
 
 int QVolume::getCompletedChaptersCount()
@@ -83,7 +98,13 @@ int QVolume::getCompletedChaptersCount()
     return ret_val;
 }
 
-QChapter* QVolume::getChapter(int idx)
+void QVolume::updateChapter(QChapter *chapter)
 {
-    return this->chapters.at(idx);
+    if (chapter->getId() == -1)
+    {
+        this->chapters.append(chapter);
+    }
+    else
+    {
+    }
 }

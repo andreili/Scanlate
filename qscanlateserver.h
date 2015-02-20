@@ -42,6 +42,8 @@ public:
 
     QJsonObject addNewVolume(QJsonObject volume_json, int project_id);
     QJsonObject updateVolumeInfo(QJsonObject volume_json, int project_id);
+    QJsonObject deleteVolume(int volume_id);
+    QJsonObject deleteChapter(int chapter_id);
 
 private:
     NetworkMode mode;

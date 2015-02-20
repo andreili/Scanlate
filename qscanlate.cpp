@@ -300,6 +300,40 @@ void QScanlate::updateVolumeInfo(QVolume *volume)
     }
 }
 
+void QScanlate::deleteVolume(QVolume *volume)
+{
+    if (this->mode == QScanlateServer::NORNAL)
+    {
+        QJsonObject del_result = this->server->deleteVolume(volume->getId());
+
+        if ((del_result.empty()) || (del_result["error"].toInt() != 0))
+        {
+            QMessageBox::critical(0, QObject::tr("Ошибка"),
+                                  QObject::tr("Невозможно удалить том на сервер!"));
+            return;
+        }
+
+        volume->removeFromTree();
+    }
+}
+
+void QScanlate::deleteChapter(QChapter *chapter)
+{
+    if (this->mode == QScanlateServer::NORNAL)
+    {
+        QJsonObject del_result = this->server->deleteChapter(chapter->getId());
+
+        if ((del_result.empty()) || (del_result["error"].toInt() != 0))
+        {
+            QMessageBox::critical(0, QObject::tr("Ошибка"),
+                                  QObject::tr("Невозможно удалить главу на сервер!"));
+            return;
+        }
+
+        chapter->removeFromTree();
+    }
+}
+
 QScanlateProject *QScanlate::getProjectByID(int id)
 {
     foreach (QScanlateProject *project, this->projects)

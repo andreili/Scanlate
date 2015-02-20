@@ -114,6 +114,20 @@ QJsonObject QScanlateServer::updateVolumeInfo(QJsonObject volume_json, int proje
     return query(url, params);
 }
 
+QJsonObject QScanlateServer::deleteVolume(int volume_id)
+{
+    QUrl url(server_url + "/data.php");
+    url.setQuery("query=del_volume&volume=" + QString::number(volume_id));
+    return query(url);
+}
+
+QJsonObject QScanlateServer::deleteChapter(int chapter_id)
+{
+    QUrl url(server_url + "/data.php");
+    url.setQuery("query=del_chapter&chapter=" + QString::number(chapter_id));
+    return query(url);
+}
+
 QJsonObject QScanlateServer::query(QUrl url)
 {
     if (token.length())

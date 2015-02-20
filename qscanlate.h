@@ -39,6 +39,8 @@ public:
 
     void addNewVolume(QVolume *volume, QTreeWidget *volumes_tree);
     void updateVolumeInfo(QVolume *volume);
+    void deleteVolume(QVolume *volume);
+    void deleteChapter(QChapter *chapter);
 
     QScanlateProject* getActiveProject() { return this->activeProject; }
     void setActiveProject(QScanlateProject* new_val) { this->activeProject = new_val; }

@@ -23,14 +23,17 @@ public:
     void deserialize(QJsonObject raw_data);
 
     void addToTree(QTreeWidgetItem *parent);
+    void removeFromTree();
 
     bool isCompleted() { return this->status == Finished; }
 
     int getId() { return this->id; }
 
     QString getName() { return this->name; }
+    void setName(QString new_name) { this->name = new_name; }
 
     int getNumber() { return this->number; }
+    void setNumber(int new_number) { this->number = new_number; }
 
 private:
     int id;

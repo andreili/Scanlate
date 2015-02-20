@@ -34,3 +34,9 @@ void QChapter::addToTree(QTreeWidgetItem *parent)
     treeItem->setData(0, Qt::UserRole, this->id);
     parent->addChild(treeItem);
 }
+
+void QChapter::removeFromTree()
+{
+    treeItem->treeWidget()->removeItemWidget(treeItem, 0);
+    delete treeItem;
+}
