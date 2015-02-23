@@ -151,7 +151,7 @@ void MainWindow::volumePropertiesDialog(QVolume *volume)
 {
     VolumeProperties properties(volume, this);
     connect(&properties, SIGNAL(UpdateVolumeInfo(QVolume*)),
-            this, SLOT(UpdateVolumeInfo(QVolume*,)));
+            this, SLOT(UpdateVolumeInfo(QVolume*)));
     properties.exec();
 }
 
@@ -274,9 +274,9 @@ void MainWindow::on_twChapters_customContextMenuRequested(const QPoint &pos)
     else if (action->data().toString() == "editVolume")
         volumePropertiesDialog(volume);
     else if (action->data().toString() == "delVolume")
-        this->scanlate->deleteVolume(volume);
+        this->scanlate->deleteVolume(volume); // TODO: Internal server error
     else if (action->data().toString() == "delChapter")
-        this->scanlate->deleteChapter(chapter);
+        this->scanlate->deleteChapter(chapter); // TODO: Internal server error
 }
 
 void MainWindow::saveState()

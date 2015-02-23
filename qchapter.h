@@ -30,6 +30,8 @@ public:
 
     int getId() { return this->id; }
 
+    void setVolumeId(int new_id) { this->volume_id = new_id; }
+
     QString getName() { return this->name; }
     void setName(QString new_name) { this->name = new_name; }
 
@@ -40,6 +42,7 @@ public:
 
 private:
     int id;
+    int volume_id;
     QString name;
     int number;
     ChapterStatus status;

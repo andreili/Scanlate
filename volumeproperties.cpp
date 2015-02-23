@@ -67,6 +67,7 @@ void VolumeProperties::on_pbAddChapter_clicked()
 {
     QChapter *chapter = new QChapter();
     chapter->deserialize(QJsonDocument::fromJson("{\"id\":-1}").object());
+    chapter->setVolumeId(volume->getId());
     chapter->setNumber(ui->sbChapterNum->value());
     chapter->setName(ui->leChapterName->text());
 

@@ -15,14 +15,16 @@ QJsonObject QChapter::serialize()
 {
     QJsonObject ret_val;
     ret_val["id"] = this->id;
+    ret_val["volume_id"] = this->volume_id;
     ret_val["name"] = this->name;
-    ret_val["num"] = QString::number(this->number);
+    ret_val["num"] = this->number;
     return ret_val;
 }
 
 void QChapter::deserialize(QJsonObject raw_data)
 {
     this->id = raw_data["id"].toInt();
+    this->volume_id = raw_data["volume_id"].toString().toInt();
     this->name = raw_data["name"].toString();
     this->number = raw_data["num"].toString().toInt();
 }

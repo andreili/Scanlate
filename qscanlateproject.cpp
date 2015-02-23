@@ -7,6 +7,15 @@ QScanlateProject::QScanlateProject(QObject *parent) :
 {
 }
 
+QScanlateProject::~QScanlateProject()
+{
+    this->tableCover->tableWidget()->removeRow(tableCover->row());
+    delete this->tableCover;
+    delete this->tableActivies;
+    foreach (QVolume *volume, this->volumes)
+        delete volume;
+}
+
 QJsonObject QScanlateProject::serialize()
 {
     QJsonObject ret_val;
@@ -26,15 +35,6 @@ QJsonObject QScanlateProject::serialize()
     ret_val["cover"] = buffer_str;
 
     return ret_val;
-}
-
-QScanlateProject::~QScanlateProject()
-{
-    this->tableCover->tableWidget()->removeRow(tableCover->row());
-    delete this->tableCover;
-    delete this->tableActivies;
-    foreach (QVolume *volume, this->volumes)
-        delete volume;
 }
 
 void QScanlateProject::deserialize(QJsonObject raw_data)
