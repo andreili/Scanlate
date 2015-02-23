@@ -31,6 +31,13 @@ public:
     int getId() { return this->id; }
 
     bool isModerator();
+    bool isScanner();
+    bool isTranslator();
+    bool isProofreader();
+    bool isCleaner();
+    bool isTyper();
+    bool isBeta();
+
     QString getLogin() { return this->login; }
 
 private:

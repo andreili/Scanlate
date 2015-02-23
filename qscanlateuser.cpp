@@ -43,8 +43,39 @@ void QScanlateUser::deserialize(QJsonObject raw_data)
 
 bool QScanlateUser::isModerator()
 {
-    foreach (Role role, this->roles)
+    /*foreach (Role role, this->roles)
         if ((role == Role::Admin) || (role == Role::TeamLider))
             return true;
-    return false;
+    return false;*/
+    return (this->roles.contains(Role::Admin) || this->roles.contains(Role::TeamLider));
+}
+
+bool QScanlateUser::isScanner()
+{
+    return this->roles.contains(Role::Scanner);
+}
+
+bool QScanlateUser::isTranslator()
+{
+    return this->roles.contains(Role::Translator);
+}
+
+bool QScanlateUser::isProofreader()
+{
+    return this->roles.contains(Role::ProofReader);
+}
+
+bool QScanlateUser::isCleaner()
+{
+    return this->roles.contains(Role::Cleaner);
+}
+
+bool QScanlateUser::isTyper()
+{
+    return this->roles.contains(Role::Typer);
+}
+
+bool QScanlateUser::isBeta()
+{
+    return this->roles.contains(Role::Beta);
 }
