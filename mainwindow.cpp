@@ -6,6 +6,7 @@
 #include <QAction>
 #include <QMessageBox>
 #include <QJsonDocument>
+#include <QColorDialog>
 #include <QStandardItemModel>
 
 MainWindow::MainWindow(QScanlateServer *server, QWidget *parent) :
@@ -156,8 +157,14 @@ void MainWindow::volumePropertiesDialog(QVolume *volume)
 
 void MainWindow::setActiveChapter(QChapter *chapter)
 {
+    this->activeChapter = chapter;
     this->m_chapter_label->setText(QObject::tr("Глава: ") + QString::number(chapter->getNumber()));
-    // TODO
+
+    LoadingWindow loadingWindow(this);
+    connect(&loadingWindow, SIGNAL(loadingProc()), this, SLOT(LoadChapterFiles()));
+    connect(this, SIGNAL(UpdateProgress(QString,int,int)), &loadingWindow, SLOT(UpdateProgress(QString,int,int)));
+    loadingWindow.Start();
+    loadingWindow.exec();
 }
 
 void MainWindow::on_twProjects_doubleClicked(const QModelIndex &index)
@@ -280,4 +287,80 @@ void MainWindow::saveState()
 void MainWindow::on_MainWindow_destroyed()
 {
     scanlate->saveState("./data/");
+}
+
+#define updateSampleFont() \
+{ \
+    QFont font(ui->cbStyleFonts->currentFont().family(), ui->sbStyleSize->value(), \
+        (ui->cbBold->checkState() == Qt::Checked ? QFont::Bold : QFont::Normal), \
+        ui->cbItalic->checkState() == Qt::Checked); \
+    ui->lStyleSample->setFont(font); \
+}
+// TODO: color
+
+void MainWindow::on_lwStyles_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+{
+    QTranslateStyle *style = scanlate->getActiveProject()->getStyle(current->text());
+    QFont font;
+    font.setFamily(style->getFontName());
+
+    ui->leStyleName->setText(style->getName());
+    ui->cbStyleFonts->setCurrentFont(font);
+    ui->sbStyleSize->setValue(style->getSize());
+    ui->cbItalic->setChecked(style->getItalic());
+    ui->cbBold->setChecked(style->getBold());
+    updateSampleFont();
+}
+
+void MainWindow::on_cbStyleFonts_currentFontChanged(const QFont &f)
+{
+    updateSampleFont();
+}
+
+void MainWindow::on_sbStyleSize_valueChanged(int arg1)
+{
+    updateSampleFont();
+}
+
+void MainWindow::on_cbItalic_stateChanged(int arg1)
+{
+    updateSampleFont();
+}
+
+void MainWindow::on_cbBold_stateChanged(int arg1)
+{
+    updateSampleFont();
+}
+
+void MainWindow::on_pbColor_clicked()
+{
+    /*QColor color = QColorDialog::getColor(Qt::black, this);
+    if (color.isValid())
+    {
+        updateSampleFont();
+        QPalette pal(ui->lStyleSample->palette());
+        pal.setColor(QPalette::WindowText, color);
+        ui->lStyleSample->setPalette(pal);
+    }*/
+}
+
+void MainWindow::on_pbAdd_clicked()
+{
+    QTranslateStyle *style = new QTranslateStyle();
+    style->setName(ui->leStyleName->text());
+    style->setFontName(ui->cbStyleFonts->currentFont().family());
+    style->setSize(ui->sbStyleSize->value());
+    style->setItalic(ui->cbItalic->checkState() == Qt::Checked);
+    style->setBold(ui->cbBold->checkState() == Qt::Checked);
+    scanlate->getActiveProject()->addStyle(style, ui->lwStyles);
+}
+
+void MainWindow::on_pbSave_clicked()
+{
+    QTranslateStyle *style = scanlate->getActiveProject()->getStyle(ui->lwStyles->currentItem()->text());
+    style->setName(ui->leStyleName->text());
+    style->setFontName(ui->cbStyleFonts->currentFont().family());
+    style->setSize(ui->sbStyleSize->value());
+    style->setItalic(ui->cbItalic->checkState() == Qt::Checked);
+    style->setBold(ui->cbBold->checkState() == Qt::Checked);
 }

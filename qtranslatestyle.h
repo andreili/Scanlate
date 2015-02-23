@@ -18,16 +18,22 @@ public:
     int getId() { return this->id; }
 
     QString getName() { return this->name; }
+    void setName(QString val) { this->name = val; }
 
     QString getFontName() { return this->fontName; }
+    void setFontName(QString val) { this->fontName = val; }
 
     int getSize() { return this->fontSize; }
+    void setSize(int val) { this->fontSize = val; }
 
     bool getItalic() { return this->italic; }
+    void setItalic(bool val) { this->italic = val; }
 
     bool getBold() { return this->bold; }
+    void setBold(bool val) { this->bold = val; }
 
     QColor getColor() { return this->color; }
+    void setColor(QColor val) { this->color = val; }
 
 private:
     int id;

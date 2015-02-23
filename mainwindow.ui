@@ -171,12 +171,34 @@
         </item>
         <item>
          <widget class="QGroupBox" name="groupBox_2">
+          <property name="minimumSize">
+           <size>
+            <width>440</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>440</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="title">
            <string>Параметры стиля</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
            <item row="2" column="1">
-            <widget class="QSpinBox" name="sbStyleSize"/>
+            <widget class="QSpinBox" name="sbStyleSize">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>200</number>
+             </property>
+             <property name="value">
+              <number>10</number>
+             </property>
+            </widget>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_5">
@@ -212,7 +234,13 @@
            <item row="8" column="0" colspan="2">
             <widget class="QLabel" name="lStyleSample">
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sample Text&lt;/p&gt;&lt;p&gt;1234567890-=&lt;/p&gt;&lt;p&gt;!@#$%^&amp;amp;*()_+&lt;/p&gt;&lt;p&gt;,.&amp;lt;&amp;gt;/?;:'&amp;quot;\|[]{}`~&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>Sample Text
+qwertyuiopasdfghjklzxcvbnm
+йцукенгшщзхъфывапролджэячсмитьбю
+1234567890-=!@#$%^&amp;amp;*()_+,.&amp;lt;&amp;gt;/?;:'&amp;quot;\|[]{}`~</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
              </property>
             </widget>
            </item>

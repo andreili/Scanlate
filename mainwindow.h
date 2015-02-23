@@ -60,6 +60,7 @@ public Q_SLOTS:
     void LoadProjectsList();
     void UpdateProjectInfo(QScanlateProject *project);
     void UpdateVolumeInfo(QVolume *volume);
+
     void LoadChapterFiles();
 
 private slots:
@@ -67,6 +68,14 @@ private slots:
     void on_twProjects_customContextMenuRequested(const QPoint &pos);
     void on_twChapters_customContextMenuRequested(const QPoint &pos);
     void on_MainWindow_destroyed();
+    void on_lwStyles_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    void on_cbStyleFonts_currentFontChanged(const QFont &f);
+    void on_sbStyleSize_valueChanged(int arg1);
+    void on_cbItalic_stateChanged(int arg1);
+    void on_cbBold_stateChanged(int arg1);
+    void on_pbColor_clicked();
+    void on_pbAdd_clicked();
+    void on_pbSave_clicked();
 };
 
 #endif // MAINWINDOW_H

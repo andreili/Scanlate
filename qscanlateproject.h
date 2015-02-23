@@ -64,6 +64,7 @@ public:
 
     void parseStyles(QJsonObject raw_data, QListWidget *list);
     QTranslateStyle* getStyle(QString name);
+    void addStyle(QTranslateStyle *style, QListWidget *list);
 
 private:
     int id;

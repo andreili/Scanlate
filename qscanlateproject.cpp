@@ -145,7 +145,15 @@ void QScanlateProject::parseStyles(QJsonObject raw_data, QListWidget *list)
 QTranslateStyle* QScanlateProject::getStyle(QString name)
 {
     foreach (QTranslateStyle *style, this->styles)
-        if (style->getName().compare(name, Qt::CaseInsensitive))
+        if (style->getName().compare(name, Qt::CaseInsensitive) == 0)
             return style;
     return NULL;
+}
+
+void QScanlateProject::addStyle(QTranslateStyle *style, QListWidget *list)
+{
+    QListWidgetItem *item = new QListWidgetItem(style->getName());
+    item->setData(Qt::UserRole, style->getId());
+    list->addItem(item);
+    this->styles.append(style);
 }
