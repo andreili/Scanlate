@@ -10,12 +10,12 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QTextCodec *utfCodec = QTextCodec::codecForName("UTF-8");
-   // QTextCodec::setCodecForTr(utfCodec);
     QTextCodec::setCodecForLocale(utfCodec);
-    //QTextCodec::setCodecForCStrings(utfCodec);
 
     MainWindow *w;
     QDesktopWidget *desktop = QApplication::desktop();
+    int ret_val;
+
     while (1)
     {
         LoginDialog loginDialog;
@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
             int screenHeight;
             int x, y;
 
-            w = new MainWindow(loginDialog.getServer(), loginDialog.getUser(), loginDialog.getToken());
+            w = new MainWindow(loginDialog.getServer());
             screenWidth = desktop->width();
             screenHeight = desktop->height();
             x = (screenWidth - w->width()) / 2;
@@ -38,7 +38,10 @@ int main(int argc, char *argv[])
 
             w->setEnabled(true);
 
-            return app.exec();
+            ret_val = app.exec();
+            w->saveState();
+            return ret_val;
+            break;
         case false:
             QMessageBox::critical(0, QObject::tr("Ошибка"),
                                   QObject::tr("Не выполнен вход пользователя!\nПрограмма будет закрыта."));
@@ -47,5 +50,5 @@ int main(int argc, char *argv[])
         }
     }
 
-    return 1;
+    return 0;
 }

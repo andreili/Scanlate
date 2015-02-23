@@ -12,7 +12,7 @@ class LoadingWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit LoadingWindow(QString obj, QWidget *parent = 0);
+    explicit LoadingWindow(QWidget *parent = 0);
     ~LoadingWindow();
 
     void Start();
@@ -24,7 +24,7 @@ Q_SIGNALS:
     void loadingProc();
 
 public Q_SLOTS:
-    void UpdateProgress(int all, int completed);
+    void UpdateProgress(QString obj, int all, int completed);
 };
 
 #endif // LOADINGWINDOW_H

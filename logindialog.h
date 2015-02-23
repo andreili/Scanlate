@@ -2,6 +2,7 @@
 #define LOGINDIALOG_H
 
 #include <QDialog>
+#include "qscanlateserver.h"
 
 namespace Ui {
 class LoginDialog;
@@ -20,16 +21,12 @@ public:
     explicit LoginDialog(QWidget *parent = 0);
     ~LoginDialog();
 
-    QString getToken() { return m_token; }
-    QString getUser() { return m_login; }
-    QString getServer() { return m_server; }
+    QScanlateServer* getServer() { return m_server; }
 
 private:
     Ui::LoginDialog *ui;
 
-    QString m_server;
-    QString m_token;
-    QString m_login;
+    QScanlateServer *m_server;
 
 public slots:
     void slotAcceptLogin();

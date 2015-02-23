@@ -15,22 +15,38 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     logindialog.cpp \
-    api.cpp \
     loadingwindow.cpp \
-    qproject.cpp
+    qscanlateserver.cpp \
+    qscanlateuser.cpp \
+    qscanlate.cpp \
+    qscanlateproject.cpp \
+    projectproperties.cpp \
+    qvolume.cpp \
+    qchapter.cpp \
+    volumeproperties.cpp
 
 HEADERS  += mainwindow.h \
     logindialog.h \
-    api.h \
     loadingwindow.h \
-    qproject.h
+    qscanlateserver.h \
+    qscanlateuser.h \
+    qscanlate.h \
+    qscanlateproject.h \
+    projectproperties.h \
+    qvolume.h \
+    qchapter.h \
+    volumeproperties.h
 
 FORMS    += mainwindow.ui \
     logindialog.ui \
-    loadingwindow.ui
+    loadingwindow.ui \
+    projectproperties.ui \
+    volumeproperties.ui
 
-OTHER_FILES += \
-    loading.gif
+OTHER_FILES +=
 
 CONFIG += c++11
 QMAKE_CXXFLAGS += -std=c++11
+
+RESOURCES += \
+    images.qrc
