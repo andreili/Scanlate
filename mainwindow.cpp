@@ -47,21 +47,21 @@ void MainWindow::setUser(QString login, QString token)
     m_login_label->setText(login);
 }
 
-#define LOADING_STEPS 4
+#define LOADING_PROJECTS_STEPS 4
 
 void MainWindow::LoadProjectsList()
 {
-    emit UpdateProgress(QObject::tr("Сведения о пользователе"), LOADING_STEPS, 1);
+    emit UpdateProgress(QObject::tr("Сведения о пользователе"), LOADING_PROJECTS_STEPS, 1);
     scanlate->getUserInfo();
     ui->lLogin->setText(this->scanlate->getUser()->getLogin());
 
-    emit UpdateProgress(QObject::tr("Список участников"), LOADING_STEPS, 2);
+    emit UpdateProgress(QObject::tr("Список участников"), LOADING_PROJECTS_STEPS, 2);
     scanlate->getUsersList();
 
-    emit UpdateProgress(QObject::tr("Список проектов"), LOADING_STEPS, 3);
+    emit UpdateProgress(QObject::tr("Список проектов"), LOADING_PROJECTS_STEPS, 3);
     scanlate->getProjectsList(ui->twProjects);
 
-    emit UpdateProgress("", LOADING_STEPS, LOADING_STEPS + 1);
+    emit UpdateProgress("", LOADING_PROJECTS_STEPS, LOADING_PROJECTS_STEPS + 1);
 }
 
 void MainWindow::UpdateProjectInfo(QScanlateProject *project)
@@ -80,6 +80,26 @@ void MainWindow::UpdateVolumeInfo(QVolume *volume)
     }
     else
         this->scanlate->addNewVolume(volume, this->ui->twChapters);
+}
+
+#define LOADING_CHAPTER_STEPS 4
+
+void MainWindow::LoadChapterFiles()
+{
+    emit UpdateProgress(QObject::tr("Стили главы"), LOADING_CHAPTER_STEPS, 1);
+    scanlate->loadStyles(scanlate->getActiveProject(), ui->lwStyles);
+
+    emit UpdateProgress(QObject::tr("Перевод главы"), LOADING_CHAPTER_STEPS, 2);
+    scanlate->loadTranslate(this->activeChapter);
+
+    emit UpdateProgress(QObject::tr("Оригинал главы"), LOADING_CHAPTER_STEPS, 3);
+    scanlate->loadRAW(this->activeChapter);
+
+    emit UpdateProgress(QObject::tr("Очищенная глава"), LOADING_CHAPTER_STEPS, 4);
+    if (scanlate->getUser()->isTyper())
+        scanlate->loadClean(this->activeChapter);
+
+    // TODO
 }
 
 void MainWindow::setEnabledMenu(const QMenu &menu)

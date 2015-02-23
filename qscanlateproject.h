@@ -5,9 +5,11 @@
 #include <QJsonObject>
 #include <QTableWidget>
 #include <QTreeWidget>
+#include <QListWidget>
 #include <QPixmap>
 #include <QDate>
 #include "qvolume.h"
+#include "qtranslatestyle.h"
 
 class QScanlateProject : public QObject
 {
@@ -60,6 +62,9 @@ public:
 
     void addNewVolume(QVolume *volume, QTreeWidget *volumes_tree);
 
+    void parseStyles(QJsonObject raw_data, QListWidget *list);
+    QTranslateStyle* getStyle(QString name);
+
 private:
     int id;
     QString name;
@@ -74,6 +79,7 @@ private:
     QTableWidgetItem *tableActivies;
 
     QList<QVolume*> volumes;
+    QList<QTranslateStyle*> styles;
 
 signals:
 

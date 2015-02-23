@@ -23,7 +23,9 @@ SOURCES += main.cpp\
     projectproperties.cpp \
     qvolume.cpp \
     qchapter.cpp \
-    volumeproperties.cpp
+    volumeproperties.cpp \
+    qtranslate.cpp \
+    qtranslatestyle.cpp
 
 HEADERS  += mainwindow.h \
     logindialog.h \
@@ -35,7 +37,9 @@ HEADERS  += mainwindow.h \
     projectproperties.h \
     qvolume.h \
     qchapter.h \
-    volumeproperties.h
+    volumeproperties.h \
+    qtranslate.h \
+    qtranslatestyle.h
 
 FORMS    += mainwindow.ui \
     logindialog.ui \

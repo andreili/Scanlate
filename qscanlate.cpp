@@ -191,6 +191,14 @@ void QScanlate::updateProjectsTable(QTableWidget *table)
     this->lastInactiveProjectRow = row_idx;
 }
 
+QScanlateProject *QScanlate::getProjectByID(int id)
+{
+    foreach (QScanlateProject *project, this->projects)
+        if (project->getId() == id)
+            return project;
+    return NULL;
+}
+
 void QScanlate::addNewProject(QScanlateProject *project, QTableWidget *table)
 {
     if (this->mode == QScanlateServer::NORNAL)
@@ -334,21 +342,13 @@ void QScanlate::deleteChapter(QChapter *chapter)
     }
 }
 
-QScanlateProject *QScanlate::getProjectByID(int id)
-{
-    foreach (QScanlateProject *project, this->projects)
-        if (project->getId() == id)
-            return project;
-    return NULL;
-}
-
 void QScanlate::getChaptersList(QScanlateProject *project, QTreeWidget *volumes_tree)
 {
     QJsonObject volumes;
     if (this->mode == QScanlateServer::NORNAL)
         volumes = server->getChaptersList(project->getId());
     else
-        read_json("./data/project_" + QString::number(this->activeProject->getId()) + ".json", volumes);
+        read_json(getProjectFolder() + ".json", volumes);
 
     if ((volumes.empty()) || (volumes["error"].toInt() != 0) || (!volumes.contains("volumes")))
     {
@@ -359,4 +359,95 @@ void QScanlate::getChaptersList(QScanlateProject *project, QTreeWidget *volumes_
 
     volumes_tree->clear();
     project->parseVolumes(volumes["volumes"].toObject(), volumes_tree);
+}
+
+void QScanlate::loadStyles(QScanlateProject *project, QListWidget *list)
+{
+    QJsonObject styles = this->server->getTranslateForChapter(project->getId());
+
+    if ((styles.empty())
+            || (styles["error"].toInt() != 0)
+            || (!styles.contains("styles")))
+    {
+        QMessageBox::critical(0, QObject::tr("Ошибка"),
+                              QObject::tr("Невозможно получить стили перевода."));
+        return;
+    }
+
+    project->parseStyles(styles["styles"].toObject(), list);
+}
+
+void QScanlate::loadTranslate(QChapter *chapter)
+{
+    QJsonObject translate = this->server->getTranslateForChapter(chapter->getId());
+
+    if ((translate.empty())
+            || (translate["error"].toInt() != 0)
+            || (!translate.contains("lines")))
+    {
+        QMessageBox::critical(0, QObject::tr("Ошибка"),
+                              QObject::tr("Невозможно получить перевод."));
+        return;
+    }
+
+    chapter->getTranslate()->deserialize(translate);
+}
+
+void QScanlate::loadRAW(QChapter *chapter)
+{
+    QJsonObject raw_list = this->server->getRAWForChapter(chapter->getId());
+
+    if ((raw_list.empty())
+            || (raw_list["error"].toInt() != 0)
+            || (!raw_list.contains("files")))
+    {
+        QMessageBox::critical(0, QObject::tr("Ошибка"),
+                              QObject::tr("Невозможно получить файлы."));
+        return;
+    }
+
+    foreach (const QJsonValue &raw_obj, raw_list["files"].toObject())
+    {
+        QString raw_link = raw_obj.toObject()["url"].toString();
+        QString file_name = raw_obj.toObject()["fn"].toString();
+
+        if (!this->server->loadFile(raw_link, getProjectFolder() + "/RAW/" + file_name))
+        {
+            QMessageBox::critical(0, QObject::tr("Ошибка"),
+                                  QObject::tr("Невозможно загрузить файлы главы."));
+            return;
+        }
+    }
+}
+
+void QScanlate::loadClean(QChapter *chapter)
+{
+    QJsonObject clean_list = this->server->getRAWForChapter(chapter->getId());
+
+    if ((clean_list.empty())
+            || (clean_list["error"].toInt() != 0)
+            || (!clean_list.contains("files")))
+    {
+        QMessageBox::critical(0, QObject::tr("Ошибка"),
+                              QObject::tr("Невозможно получить файлы."));
+        return;
+    }
+
+    foreach (const QJsonValue &clean_obj, clean_list["files"].toObject())
+    {
+        QString clean_link = clean_obj.toObject()["url"].toString();
+        QString file_name = clean_obj.toObject()["fn"].toString();
+
+        if (!this->server->loadFile(clean_link, getProjectFolder() + "/clean/" + file_name))
+        {
+            QMessageBox::critical(0, QObject::tr("Ошибка"),
+                                  QObject::tr("Невозможно загрузить файлы главы."));
+            return;
+        }
+    }
+}
+
+QString QScanlate::getProjectFolder()
+{
+    return "./data/project_" + QString::number(this->activeProject->getId());
 }

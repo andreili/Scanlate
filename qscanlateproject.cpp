@@ -126,3 +126,26 @@ void QScanlateProject::addNewVolume(QVolume *volume, QTreeWidget *volumes_tree)
     volume->addToTree(volumes_tree);
     this->volumes.append(volume);
 }
+
+void QScanlateProject::parseStyles(QJsonObject raw_data, QListWidget *list)
+{
+    foreach (const QJsonValue &style_val, raw_data)
+    {
+        QTranslateStyle *style = new QTranslateStyle(this);
+        style->deserialize(style_val.toObject());
+
+        QListWidgetItem *item = new QListWidgetItem(style->getName());
+        item->setData(Qt::UserRole, style->getId());
+        list->addItem(item);
+
+        this->styles.append(style);
+    }
+}
+
+QTranslateStyle* QScanlateProject::getStyle(QString name)
+{
+    foreach (QTranslateStyle *style, this->styles)
+        if (style->getName().compare(name, Qt::CaseInsensitive))
+            return style;
+    return NULL;
+}

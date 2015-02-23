@@ -45,6 +45,12 @@ public:
     QJsonObject deleteVolume(int volume_id);
     QJsonObject deleteChapter(int chapter_id);
 
+    QJsonObject getStylesForProject(int project_id);
+    QJsonObject getTranslateForChapter(int chapter_id);
+    QJsonObject getRAWForChapter(int chapter_id);
+
+    bool loadFile(QString URL, QString fileName);
+
 private:
     NetworkMode mode;
     QString server_url;

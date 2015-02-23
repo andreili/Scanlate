@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QJsonObject>
 #include <QTreeWidget>
+#include "qtranslate.h"
 
 class QChapter : public QObject
 {
@@ -35,11 +36,14 @@ public:
     int getNumber() { return this->number; }
     void setNumber(int new_number) { this->number = new_number; }
 
+    QTranslate* getTranslate() { return &this->translate; }
+
 private:
     int id;
     QString name;
     int number;
     ChapterStatus status;
+    QTranslate translate;
 
     QTreeWidgetItem *treeItem;
 

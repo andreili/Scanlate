@@ -128,6 +128,33 @@ QJsonObject QScanlateServer::deleteChapter(int chapter_id)
     return query(url);
 }
 
+QJsonObject QScanlateServer::getStylesForProject(int project_id)
+{
+    QUrl url(server_url + "/data.php");
+    url.setQuery("query=get_styles&project=" + QString::number(project_id));
+    return query(url);
+}
+
+QJsonObject QScanlateServer::getTranslateForChapter(int chapter_id)
+{
+    QUrl url(server_url + "/data.php");
+    url.setQuery("query=get_translate&chapter=" + QString::number(chapter_id));
+    return query(url);
+}
+
+QJsonObject QScanlateServer::getRAWForChapter(int chapter_id)
+{
+    QUrl url(server_url + "/data.php");
+    url.setQuery("query=get_raw_list&chapter=" + QString::number(chapter_id));
+    return query(url);
+}
+
+bool QScanlateServer::loadFile(QString URL, QString fileName)
+{
+    // TODO
+    return true;
+}
+
 QJsonObject QScanlateServer::query(QUrl url)
 {
     if (token.length())

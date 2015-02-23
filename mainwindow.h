@@ -40,6 +40,7 @@ private:
     QTreeWidgetItem *m_inactive_projects_root;
 
     QScanlate *scanlate;
+    QChapter *activeChapter;
 
     void setEnabledMenu(const QMenu &menu);
 
@@ -59,6 +60,7 @@ public Q_SLOTS:
     void LoadProjectsList();
     void UpdateProjectInfo(QScanlateProject *project);
     void UpdateVolumeInfo(QVolume *volume);
+    void LoadChapterFiles();
 
 private slots:
     void on_twProjects_doubleClicked(const QModelIndex &index);

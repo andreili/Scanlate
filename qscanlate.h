@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QTableWidget>
+#include <QListWidget>
 #include "qscanlateserver.h"
 #include "qscanlateproject.h"
 #include "qscanlateuser.h"
@@ -26,8 +27,6 @@ public:
 
     QScanlateUser* getUser() { return this->user; }
 
-    void getChaptersList(QScanlateProject *project, QTreeWidget *volumes_tree);
-
     bool isLogged();
 
     /* Project managment */
@@ -45,6 +44,12 @@ public:
     QScanlateProject* getActiveProject() { return this->activeProject; }
     void setActiveProject(QScanlateProject* new_val) { this->activeProject = new_val; }
 
+    void getChaptersList(QScanlateProject *project, QTreeWidget *volumes_tree);
+    void loadStyles(QScanlateProject *project, QListWidget *list);
+    void loadTranslate(QChapter *chapter);
+    void loadRAW(QChapter *chapter);
+    void loadClean(QChapter *chapter);
+
 private:
     QScanlateServer::NetworkMode mode;
     QScanlateServer *server;
@@ -56,6 +61,8 @@ private:
     int lastActiveProjectRow;
     int lastInactiveProjectRow;
     int lastFinishedProjectRow;
+
+    QString getProjectFolder();
 
 signals:
 
